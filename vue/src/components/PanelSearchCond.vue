@@ -17,6 +17,7 @@
 								:addAble="false"
 								:models="searchCond"
 								@change="searchCond.subcategoryId = '';"
+								ref="cmpSelectCategory"
 							/>
 						</v-col>
 						<v-col cols="6" class="text-left">
@@ -26,6 +27,7 @@
 								:subcategories="subcategories"
 								:addAble="false"
 								:models="searchCond"
+								ref="cmpSelectSubcategory"
 							/> 
 						</v-col>
 					</v-row>
@@ -89,10 +91,11 @@
 					</v-row>
 				</v-container>
 				
-				<!-- 検索ボタン -->
+				<!-- ボタン -->
 				<v-container class="px-1 pt-2 pb-3">
 					<v-row>
 						<v-col class="text-right">
+							<v-btn text="検索条件クリア" @click="condClear()" variant="tonal" color="gray" class="mr-1"></v-btn>
 							<v-btn text="検索" @click="search()" variant="tonal" color="primary"></v-btn>
 						</v-col>
 					</v-row>
@@ -131,6 +134,12 @@ export default {
 			console.log(this.searchCond);
 			// 検索条件を渡して親の検索処理を呼ぶ
 			this.$emit("call-parent-search", this.searchCond);
+		},
+		condClear() {
+			this.searchCond = { categoryId: "", subcategoryId: "" };
+			// 子コンポーネントのIDに反映
+			this.$refs.cmpSelectCategory.setCategoryId(this.searchCond.categoryId);
+			this.$refs.cmpSelectSubcategory.setSubcategoryId(this.searchCond.subcategoryId);
 		},
     },
 	watch: {

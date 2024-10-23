@@ -35,6 +35,10 @@ export default {
 			var list = this.categories;
 			return Utils.getMasterName(list, categoryId);
 		},
+		/* 【親から呼び出し】カテゴリーIDを当コンポーネントに反映 */
+		setCategoryId(categoryId){
+			this.categoryId = categoryId;
+		},
 	},
 	created() {
 		this.categoryId = this.models.categoryId;

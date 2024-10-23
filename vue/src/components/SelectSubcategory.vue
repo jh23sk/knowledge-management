@@ -41,6 +41,10 @@ export default {
 		createSubCategories() {
 			return Utils.createSubCategories(this.subcategories, this.models.categoryId);
 		},
+		/* 【親から呼び出し】サブカテゴリーIDを当コンポーネントに反映 */
+		setSubcategoryId(subcategoryId){
+			this.subcategoryId = subcategoryId;
+		},
 	},
 	created() {
 		this.subcategoryId = this.models.subcategoryId;

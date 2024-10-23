@@ -12,7 +12,6 @@
 			</header>
 
 			<div class="mx-3 mb-5">
-			
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 

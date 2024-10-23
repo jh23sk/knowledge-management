@@ -1,5 +1,5 @@
 /**
- * カテゴリに関する共通関数
+ * 共通関数
  */
 
 /* 引数のカテゴリリストから、IDが一致する名称を返す */
@@ -10,6 +10,13 @@
 
 /* 引数のマスタ配列から、IDが一致する名称を返す */
 export function getMasterName(masterDataLists, id) {
+	if(id == "") {
+		return "未選択";
+	}
+//	if(id == "new") {
+//		return "新規追加";
+//	}
+	
 	const masterDataList = masterDataLists.find(masterDataList => masterDataList.id === id);
 	return masterDataList ? masterDataList.name : "";
 }
