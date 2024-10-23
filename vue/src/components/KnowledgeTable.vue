@@ -1,0 +1,399 @@
+<template>
+	<v-container>
+		<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
+			<span>
+				<span v-if="editable">
+					<!-- カテゴリー追加ボタン＆ダイアログ -->
+					<v-dialog max-width="500">
+						<template v-slot:activator="{ props: activatorProps }">
+							<v-btn
+								v-bind="activatorProps"
+								color="surface-variant"
+								text="カテゴリー操作"
+								variant="flat"
+								class="mr-1"
+							></v-btn>
+						</template>
+						
+						<template v-slot:default="{ isActive }">
+							<v-card title="カテゴリー操作">
+								<v-card-text>
+									<p>カテゴリーの新規追加・削除・名称変更を行います。</p>
+									<div class="mb-3">
+										<label class="form-label m-1">カテゴリー</label>
+										<SelectCategory
+											v-model="addedMst.categoryId"
+											:categories="editingCategories"
+											:addAble="true"
+											:models="addedMst"
+											@change="addedMst.subcategoryId = ''; addedMst.subcategoryName = '';
+												addedMst.categoryName = getCategoryName(addedMst.categoryId);"
+										/>
+										<div v-if="addedMst.categoryId" class="d-flex align-items-center">
+											<input v-model="addedMst.categoryName" class="form-control" placeholder="名称を入力してください" />
+											<v-btn text="削除" v-if="addedMst.categoryId != 'new'" @click="deleteCategoryItem(1, addedMst.categoryId)" variant="outlined" color="purple"></v-btn>
+										</div>
+									</div>
+									
+									<div>
+										<label class="form-label m-1">サブカテゴリー</label>
+										<SelectSubcategory 
+											v-model="addedMst.subcategoryId" 
+											:subcategories="editingSubcategories"
+											:addAble="true"
+											:models="addedMst"
+											@change="addedMst.subcategoryName = getSubcategoryName(addedMst.subcategoryId)"
+										/>
+										<div v-if="addedMst.subcategoryId" class="d-flex align-items-center">
+											<input v-model="addedMst.subcategoryName" class="form-control" placeholder="名称を入力してください" />
+											<v-btn text="削除" v-if="addedMst.subcategoryId != 'new'" @click="deleteCategoryItem(2, addedMst.subcategoryId)" variant="outlined" color="purple"></v-btn>
+										</div>
+									</div>
+								</v-card-text>
+								
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<v-btn text="キャンセル" @click="isActive.value = false" variant="outlined"></v-btn>
+									<v-btn text="カテゴリーリストに反映" @click="isActive.value = updateMst();" :disabled="!addedMst.categoryId" variant="outlined" color="purple"></v-btn> 
+								</v-card-actions>
+							</v-card>
+						</template>
+					</v-dialog>
+				
+					<v-btn color="primary" @click="addRow()" class="mr-1">
+						<FontAwesomeIcon icon="fa-solid fa-circle-plus" class="mr-1"/>行追加
+					</v-btn>
+					<v-btn color="primary" @click="deleteRow()" class="mr-1">
+						<FontAwesomeIcon icon="fa-solid fa-circle-minus" class="mr-1"/>行削除
+					</v-btn>
+					<v-btn color="primary" @click="save()" class="mr-1">
+						<FontAwesomeIcon icon="fa-solid fa-floppy-disk" class="mr-1"/>保存
+					</v-btn>
+				</span>
+				<v-btn-toggle v-model="toggle" color="primary" rounded="xl" mandatory>
+					<v-btn value="editMode" @click="editable = true;">
+						<FontAwesomeIcon icon="fa-solid fa-pen-to-square" class="mr-1"/>編集モード
+					</v-btn>
+					<v-btn value="viewMode" @click="editable = false;">
+						<FontAwesomeIcon icon="fa-solid fa-book-open" class="mr-1"/>閲覧モード
+					</v-btn>
+				</v-btn-toggle>
+			</span>
+		</div>
+		
+		<v-card flat>
+			<!-- https://zenn.dev/bbled/books/vuetify3_book/viewer/sec2_20_datatable -->
+			<v-data-table
+				:headers="headers"
+				:items="editingknowledges"
+				:search="search"
+				:density="compact"
+				:items-per-page="100"
+				:items-per-page-options="pages"
+				items-per-page-text="表示行数"
+				no-data-text="データがありません。"
+				v-model="selected"
+				item-value="id"
+				:show-select="editable"
+			>
+
+				<!-- tbody -->
+				<!-- ID ※非表示。チェックボックスを1つずつ選択可にするために、ユニークな値でレンダリングさせる必要がある -->
+				<template v-slot:[`item.id`]="{ item }">
+					<span hidden>{{ item.id }}</span>
+				</template>
+				
+				<!-- カテゴリー -->
+				<template v-slot:[`item.categoryId`]="{ item }">
+					<span v-if="editable">
+						<SelectCategory
+							v-model="item.categoryId"
+							:categories="editingCategories"
+							:addAble="false"
+							:models="item"
+							@change="item.subcategoryId = '';"
+						/>
+					</span>
+					<span v-else>{{ getCategoryName(item.categoryId) }}</span>
+				</template>
+				
+				<!-- サブカテゴリー -->
+				<template v-slot:[`item.subcategoryId`]="{ item }">
+					<span v-if="editable">
+						<SelectSubcategory 
+							v-model="item.subcategoryId" 
+							:subcategories="editingSubcategories"
+							:addAble="false"
+							:models="item"
+						/>
+					</span>
+					<span v-else>{{ getSubcategoryName(item.subcategoryId) }}</span>
+				</template>
+				
+				<!-- タイトル -->
+				<template v-slot:[`item.title`]="{ item }">
+					<textarea v-if="editable" v-model="item.title" class="form-control" style="border-width:1px; resize:vertical;"/>
+					<textarea v-else v-model="item.title" class="form-control p-0" style="border-width:0px; resize:none;" readonly/>
+				</template>
+				
+				<!-- 内容 -->
+				<template v-slot:[`item.content`]="{ item }">
+					<textarea v-if="editable" v-model="item.content" class="form-control" style="border-width:1px; resize:vertical;"/>
+					<textarea v-else v-model="item.content" class="form-control p-0" style="border-width:0px; resize:none;" readonly/>
+				</template>
+			</v-data-table>
+		</v-card>
+	</v-container>
+</template>
+
+<script>
+import $ from 'jquery';
+import { v4 as uuidv4 } from 'uuid';
+import * as Utils from '../assets/function/utils.js';
+import SelectCategory from './SelectCategory.vue';
+import SelectSubcategory from './SelectSubcategory.vue';
+
+export default {
+	name: 'cmp-footer',
+	components: {
+		SelectCategory,
+		SelectSubcategory,
+	},
+	props: {
+		headers: [
+			{
+				key: String,
+				title: String,
+				align: String,
+				sortable: String,
+				width: String,
+			}
+		],
+		endpoint: String,
+	},
+	data() {
+		return {
+			search: "",
+			toggle: "viewMode",
+			selected: [], // 削除チェックを入れた行
+			editingCategories: [],
+			editingSubcategories: [],
+			editingknowledges: [],
+			knowledgesSaved: [], // DB保存済のナレッジ
+			addedMst: { categoryId: "", subcategoryId: "", categoryName: "", subcategoryName: "" },
+			editable: false,
+			updateFlg: false,
+		};
+	},
+	methods: {
+		/* 【親から呼び出し】検索したカテゴリーリストを当コンポーネントに反映 */
+		setCategory(categories, subcategories) {
+			this.editingCategories = categories;
+			this.editingSubcategories = subcategories;
+		},
+		/* 【親から呼び出し】検索したナレッジリストを当コンポーネントに反映 */
+		setKnowledge(knowledges) {
+			this.editingknowledges = knowledges;
+			this.knowledgesSaved = knowledges;
+		},
+		/* 選択したカテゴリーから、サブカテゴリーを絞り込んで返却  */
+		createSubCategories(categoryId) {
+			return Utils.createSubCategories(this.editingSubcategories, categoryId);
+		},
+		/* カテゴリーのIDに対応する名称を返す */
+		getCategoryName(categoryId) {
+			return Utils.getMasterName(this.editingCategories, categoryId);
+		},
+		/* サブカテゴリーのIDに対応する名称を返す */
+		getSubcategoryName(subcategoryId) {
+			return Utils.getMasterName(this.editingSubcategories, subcategoryId);
+		},
+		/* カテゴリーリスト更新 【戻り値】エラーなし：false、エラーあり：true */
+		updateMst() {
+			// カテゴリーが新規追加されたか
+			const IsAddedNewCategory = (this.addedMst.categoryId == "new");
+			const IsAddedNewSubcategory = (this.addedMst.subcategoryId == "new");
+			// 既存カテゴリーの名称が変更されたか
+			const IsChangedCategoryName = !IsAddedNewCategory && (this.getCategoryName(this.addedMst.categoryId) != this.addedMst.categoryName);
+			const IsChangedSubcategoryName = !IsAddedNewSubcategory && (this.getSubcategoryName(this.addedMst.subcategoryId) != this.addedMst.subcategoryName);
+			
+			/* エラーチェック */
+			// カテゴリー・サブカテゴリーともに変更なしの場合エラー
+			if((!IsAddedNewCategory && !IsChangedCategoryName) && (!IsAddedNewSubcategory && !IsChangedSubcategoryName)) {
+				alert("このカテゴリーは追加済です。");
+				return true;
+			}
+			// 未選択以外のカテゴリーを選択しているのに、名称が未入力の場合エラー
+			if((this.addedMst.categoryId && !this.addedMst.categoryName)
+				|| (this.addedMst.subcategoryId && !this.addedMst.subcategoryName)) {
+				alert("名称を入力してください。");
+				return true;
+			}
+			
+			/* カテゴリーリストに反映 */
+			// カテゴリーを追加した場合はリストに反映
+			if(IsAddedNewCategory) {
+				this.addedMst.categoryId = uuidv4();
+				this.editingCategories.unshift(
+					{ id: this.addedMst.categoryId, name: this.addedMst.categoryName },
+				);
+			}
+			// サブカテゴリーを追加した場合はリストに反映
+			if(IsAddedNewSubcategory) {
+				this.addedMst.subcategoryId = uuidv4();
+				this.editingSubcategories.unshift(
+					{ id: this.addedMst.subcategoryId, name: this.addedMst.subcategoryName, categoryId: this.addedMst.categoryId }	
+				);
+			}
+			// 既存のカテゴリーの名称を変更した場合はリストに反映
+			if(IsChangedCategoryName) {
+				const targetId = this.addedMst.categoryId;
+				const newName = this.addedMst.categoryName;
+				$.each(this.editingCategories,
+					function(index, val) {
+						if(val.id == targetId) {
+							val.name = newName;
+							return;
+						}
+					}
+				);
+			}
+			// 既存のサブカテゴリーの名称を変更した場合はリストに反映
+			if(IsChangedSubcategoryName) {
+				const targetId = this.addedMst.subcategoryId;
+				const newName = this.addedMst.subcategoryName;
+				$.each(this.editingSubcategories,
+					function(index, val) {
+						if(val.id == targetId) {
+							val.name = newName;
+							return;
+						}
+					}
+				);
+			}
+			
+			alert("カテゴリーリストに反映しました。保存ボタンで保存してください。");
+			this.addedMst = [];
+			return false;
+		},
+		/* カテゴリーの「削除」押下時処理 */
+		/* 【引数】type：1(カテゴリー)または2(サブカテゴリー)、id：選択したID */
+		/* 【戻り値】true(エラーあり)またはfalse(エラーなし) */
+		deleteCategoryItem(type, id) {
+			const typeName = type == 1 ? "カテゴリー" : "サブカテゴリー";
+			
+			if(confirm("この" + typeName + "を削除しますか？")) {
+				/* エラーチェック */
+				// 配下のサブカテゴリーが存在しないこと
+				if(type == 1) {
+					if(this.createSubCategories(id).length > 0) {
+						alert("配下のサブカテゴリーが存在するため削除できません。");
+						return true;
+					}
+				}
+				
+				// 保存済のナレッジで使用していないこと
+				const fil1 = this.knowledgesSaved.filter(knowledge => {
+					return (type == 1 ? knowledge.categoryId : knowledge.subcategoryId) == id;
+				});
+				// 保存前のナレッジで使用していないこと
+				const fil2 = this.editingknowledges.filter(knowledge => {
+					return (type == 1 ? knowledge.categoryId : knowledge.subcategoryId) == id;
+				});
+				if(fil1.length > 0 || fil2.length > 0) {
+					alert("ナレッジに設定中のため削除できません。");
+					return true;
+				}
+				
+				/* 対象のカテゴリーをリストから削除 */
+				if(type == 1) {
+					this.editingCategories = this.editingCategories.filter(editingCategory => {
+						return editingCategory.id != id;
+					});
+				} else {
+					this.editingSubcategories = this.editingSubcategories.filter(editingSubcategory => {
+						return editingSubcategory.id != id;
+					});
+				}
+				
+				// 初期化
+				if(type == 1) {
+					this.addedMst = [];
+				} else {
+					this.addedMst.subcategoryId = "";
+					this.addedMst.subcategoryName = "";
+				}
+				
+				alert(typeName + "を削除しました。保存ボタンで保存してください。");				
+				return false;
+			}
+		},
+		/* 「行追加」押下時処理 */
+		addRow() {
+			this.editingknowledges.unshift(
+				{ id: uuidv4(), categoryId: "", subcategoryId: "", title: "", content: "" },
+			);
+		},
+		/* ナレッジの配列から、選択した行を除外して返却 */
+		removeSelectedKnowledges() {
+			this.selected.forEach(checkedRow => {
+				this.editingknowledges = this.editingknowledges.filter(knowledge => {
+					return knowledge.id != checkedRow;
+				});
+			});
+			this.selected = [];
+			return this.editingknowledges;
+		},
+		/* 「行削除」押下時処理 */
+		deleteRow() {
+			if(this.selected.length == 0) {
+				alert("削除したい行を選択してください。");
+			} else {
+				if(confirm("選択した行を削除してよろしいですか？")) {
+					this.editingknowledges = this.removeSelectedKnowledges();
+					alert("選択した行を削除しました。保存ボタンで保存してください。");
+				}
+			}
+		},
+		/* 「保存」押下時処理 */
+		async save() {
+			this.$emit("call-parent-save", 
+				this.editingCategories, 
+				this.editingSubcategories, 
+				this.editingknowledges,
+				(this.selected.length > 0)
+			);
+		},
+	},
+	watch: {
+		// 編集したらロード、検索ボタン押下前とかに「保存しますか？」ダイアログを出したい
+		// 初期表示でカテゴリーはupdate検知してしまう（親から当コンポーネントの関数呼んで反映させてるため）検索したときは検知する
+		// ナレッジは入力したり行追加しても検知されない
+		/* editingCategories() {
+			console.log("カテゴリー変更");
+			this.updateFlg = true;
+		},
+		editingSubcategories() {
+			console.log("サブカテゴリー変更");
+			this.updateFlg = true;
+		},
+		editingknowledges() {
+			console.log("ナレッジ変更");
+			this.updateFlg = true;
+		}, */
+	},
+	created() {
+		console.log("knowledgetableのcreated")
+	},
+	mounted () {
+		console.log("mountedが呼ばれました");
+	},
+	computed: {
+		
+	},
+}
+</script>
+
+<!-- <style scoped> -->
+<style>
+</style>
