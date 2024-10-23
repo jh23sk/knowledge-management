@@ -1,7 +1,13 @@
 package com.example.demo.models.personal;
 
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +15,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "t_personal_knowledge")
+@IdClass(KnowledgePK.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,9 +23,11 @@ import lombok.Setter;
 public class Knowledge {
 
 	@Id
+	@Column(name = "id", nullable = false)
 	private String id;
 
-	@Column(name = "owner_id")
+	@Id
+	@Column(name = "owner_id", nullable = false)
 	private String ownerId;
 
 	@Column(name = "category_id")
@@ -27,10 +36,10 @@ public class Knowledge {
 	@Column(name = "subcategory_id")
 	private String subcategoryId;
 
-	@Column(name = "title")
+	@Column(name = "title", columnDefinition = "VARCHAR(300)")
 	private String title;
 
-	@Column(name = "content")
+	@Column(name = "content", columnDefinition = "TEXT")
 	private String content;
 
 	@Column(name = "update_date")

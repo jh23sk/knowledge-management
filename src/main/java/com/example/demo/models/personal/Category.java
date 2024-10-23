@@ -1,7 +1,13 @@
 package com.example.demo.models.personal;
 
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +15,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "t_personal_category")
+@IdClass(CategoryPK.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,12 +23,14 @@ import lombok.Setter;
 public class Category {
 
 	@Id
+	@Column(name = "id", nullable = false)
 	private String id;
 
-	@Column(name = "owner_id")
+	@Id
+	@Column(name = "owner_id", nullable = false)
 	private String ownerId;
 
-	@Column(name = "name")
+	@Column(name = "name", columnDefinition = "VARCHAR(300)")
 	private String name;
 
 	@Column(name = "update_date")
