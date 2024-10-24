@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class KnowledgePK implements Serializable {
+public class TPersonalCategoryPK implements Serializable {
 	@Column(name = "id")
 	private String id;
 

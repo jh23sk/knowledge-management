@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "t_personal_subcategory")
-@IdClass(SubcategoryPK.class)
+@IdClass(TPersonalSubcategoryPK.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

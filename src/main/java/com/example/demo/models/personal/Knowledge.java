@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "t_personal_knowledge")
-@IdClass(KnowledgePK.class)
+@IdClass(TPersonalKnowledgePK.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
