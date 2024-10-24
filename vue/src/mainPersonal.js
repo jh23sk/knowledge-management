@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './Personal.vue';
 import vuetify from './assets/js/vuetify';
+import FontAwesomeIcon from './assets/js/fortawesome';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import './assets/style/common.css';
@@ -8,38 +9,6 @@ import './assets/style/common.css';
 // VTooltip
 import { Tooltip } from 'floating-vue';
 import 'floating-vue/dist/style.css';
-
-// fontawesome
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-	faCube,
-	faComments,
-	faRightFromBracket,
-	faCirclePlus,
-	faCircleMinus,
-	faPenToSquare,
-	faTrash,
-	faFloppyDisk,
-	faEye,
-	faEyeSlash,
-	faBookOpen,
-	faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-library.add(
-	faCube,
-	faComments,
-	faRightFromBracket,
-	faCirclePlus,
-	faCircleMinus,
-	faPenToSquare,
-	faTrash,
-	faFloppyDisk,
-	faEye,
-	faEyeSlash,
-	faBookOpen,
-	faXmark,
-);
 
 // VueDatePicker
 import VueDatePicker from '@vuepic/vue-datepicker';
