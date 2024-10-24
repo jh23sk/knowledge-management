@@ -1,11 +1,12 @@
 package com.example.demo.services.personal;
 
-import com.example.demo.models.personal.Subcategory;
-import com.example.demo.repositories.personal.SubcategoryRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.models.personal.Subcategory;
+import com.example.demo.repositories.personal.SubcategoryRepository;
 
 @Service
 public class SubcategoryService {
@@ -18,24 +19,21 @@ public class SubcategoryService {
 
 	/**
 	 * サブカテゴリーリストをDBから検索します。
-	 * 検索条件：なし
-	 * 
-	 * @return List<Subcategory> 検索条件に合致するサブカテゴリーリストサブカテゴリー
-	public List<Subcategory> getAllSubcategories() {
-		return subcategoryRepository.findAll();
-	}
-	
-	/**
-	 * サブカテゴリーリストをDBから検索します。
-	 * 検索条件：t_personal_subcategory.owner_idとログインユーザーIDが一致すること
+	 * 対象：t_personal_subcategory.owner_idとログインユーザーIDが一致するデータ
 	 * 
 	 * @param loginUserId ログインユーザーID
-	 * @return List<Subcategory> 検索条件に合致するサブカテゴリーリスト
+	 * @return List<Subcategory> サブカテゴリーリスト
 	 */
 	public List<Subcategory> getSubcategoriesByOwnerId(String loginUserId) {
 		return subcategoryRepository.findByOwnerId(loginUserId);
 	}
 
+	/**
+	 * サブカテゴリーリストをDBから削除します。
+	 * 対象：t_personal_subcategory.owner_idとログインユーザーIDが一致するデータ
+	 * 
+	 * @param loginUserId ログインユーザーID
+	 */
 	public void deleteSubcategoriesByOwnerId(String ownerId) {
 		List<Subcategory> subcategories = getSubcategoriesByOwnerId(ownerId);
 		if (!subcategories.isEmpty()) {

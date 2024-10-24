@@ -1,12 +1,5 @@
 package com.example.demo.services.personal;
 
-import com.example.demo.models.personal.Knowledge;
-import com.example.demo.models.personal.SearchCondition;
-import com.example.demo.repositories.personal.KnowledgeRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +9,14 @@ import java.util.Objects;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.models.personal.Knowledge;
+import com.example.demo.models.personal.SearchCondition;
+import com.example.demo.repositories.personal.KnowledgeRepository;
 
 @Service
 public class KnowledgeService {
@@ -30,7 +31,8 @@ public class KnowledgeService {
 	}
 
 	/**
-	 * 検索条件に合致するナレッジリリストをDBから検索します。
+	 * ナレッジリリストをDBから検索します。
+	 * 対象：t_personal_knowledge.owner_idとログインユーザーIDが一致する、かつ画面で設定した検索条件に一致するデータ
 	 * 
 	 * @param searchCond 画面で設定した検索条件
 	 * @param loginUserId ログインユーザーID
@@ -77,6 +79,13 @@ public class KnowledgeService {
 		return query.getResultList();
 	}
 
+	/**
+	 * ナレッジリリストをDBから削除します。
+	 * 対象：t_personal_knowledge.owner_idとログインユーザーIDが一致する、かつ画面で設定した検索条件に一致するデータ
+	 * 
+	 * @param searchCond 画面で設定した検索条件
+	 * @param loginUserId ログインユーザーID
+	 */
 	@Transactional
 	public void deleteKnowledgesBySearchCond(SearchCondition searchCond, String loginUserId) {
 		List<Knowledge> knowledgesToDelete = searchKnowledges(searchCond, loginUserId);

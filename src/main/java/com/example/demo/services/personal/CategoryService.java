@@ -1,11 +1,12 @@
 package com.example.demo.services.personal;
 
-import com.example.demo.models.personal.Category;
-import com.example.demo.repositories.personal.CategoryRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.demo.models.personal.Category;
+import com.example.demo.repositories.personal.CategoryRepository;
 
 @Service
 public class CategoryService {
@@ -18,25 +19,21 @@ public class CategoryService {
 
 	/**
 	 * カテゴリーリストをDBから検索します。
-	 * 検索条件：なし
-	 * 
-	 * @return List<Category> 検索条件に合致するカテゴリーリスト
-	 */
-	public List<Category> getAllCategories() {
-		return categoryRepository.findAll();
-	}
-
-	/**
-	 * カテゴリーリストをDBから検索します。
-	 * 検索条件：t_personal_category.owner_idとログインユーザーIDが一致すること
+	 * 対象：t_personal_category.owner_idとログインユーザーIDが一致するデータ
 	 * 
 	 * @param loginUserId ログインユーザーID
-	 * @return List<Category> 検索条件に合致するカテゴリーリスト
+	 * @return List<Category> カテゴリーリスト
 	 */
 	public List<Category> getCategoriesByOwnerId(String loginUserId) {
 		return categoryRepository.findByOwnerId(loginUserId);
 	}
 
+	/**
+	 * カテゴリーリストをDBから削除します。
+	 * 対象：t_personal_category.owner_idとログインユーザーIDが一致するデータ
+	 * 
+	 * @param loginUserId ログインユーザーID
+	 */
 	public void deleteCategoriesByOwnerId(String ownerId) {
 		List<Category> categories = getCategoriesByOwnerId(ownerId);
 		if (!categories.isEmpty()) {
