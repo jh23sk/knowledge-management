@@ -106,7 +106,7 @@
 				</v-container>
 				
 				<!-- ボタン -->
-				<v-container class="px-1 pt-1 pb-3">
+				<v-container class="px-1 pt-0 pb-3">
 					<v-row>
 						<v-col class="text-right">
 							<v-btn text="検索条件クリア" @click="condClear()" variant="tonal" color="gray" class="mr-1"></v-btn>
@@ -170,16 +170,5 @@ export default {
 <style>
 .form-label {
 	margin: 0;
-}
-
-/* ラジオボタンのラベル */
-.v-label {
-	padding: 0 !important;
-	margin: 0 !important;
-	font-size: 0.9rem !important;
-}
-/* ラジオボタン下のスペース */
-.v-input__details {
-	display: none !important;
 }
 </style>

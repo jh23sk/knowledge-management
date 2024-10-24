@@ -11,7 +11,7 @@
 				</h3>
 			</header>
 
-			<div class="mx-2 mb-5">
+			<div class="mx-4 mb-5">
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 

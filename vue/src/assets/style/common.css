@@ -77,6 +77,13 @@ td {
 	padding: 5px 30px !important;
 }
 
+/* ラジオボタンのラベル */
+.v-label {
+	padding: 0 !important;
+	margin: 0 !important;
+	font-size: 0.9rem !important;
+}
+
 /* ラジオボタン下のスペース */
 .v-input__details {
 	display: none !important;

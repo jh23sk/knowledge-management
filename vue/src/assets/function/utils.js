@@ -10,7 +10,7 @@
 
 /* 引数のマスタ配列から、IDが一致する名称を返す */
 export function getMasterName(masterDataLists, id) {
-	if(id == "") {
+	if(id == "" || id == null) {
 		return "未選択";
 	}
 //	if(id == "new") {

@@ -11,7 +11,7 @@
 				</h3>
 			</header>
 
-			<div class="mx-2 mb-5">
+			<div class="mx-3 mb-5">
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 
@@ -65,6 +65,7 @@ export default {
 				{ key: "questionUserName", title: "質問者", align: "center", sortable: false, width: "10%" },
 				{ key: "answerDate", title: "回答日時", align: "center", sortable: true, width: "10%" },
 				{ key: "answerUserName", title: "回答者", align: "center", sortable: false, width: "10%" },
+				/* { key: "answerUserName", title: "回答者", align: "center", sortable: false, width: "10%" }, */
 			],
 			categories: [],
 			subcategories: [],

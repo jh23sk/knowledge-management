@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<!-- <v-container> -->
 		<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
 			<span>
 				<span v-if="editable">
@@ -143,7 +143,7 @@
 				</template>
 			</v-data-table>
 		</v-card>
-	</v-container>
+	<!-- </v-container> -->
 </template>
 
 <script>
