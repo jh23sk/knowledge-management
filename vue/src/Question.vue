@@ -11,19 +11,21 @@
 				</h3>
 			</header>
 
-			<div class="mx-3 mb-5">
+			<div class="mx-2 mb-5">
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 
 					:subcategories="subcategories"
 					:endpoint="endpoint"
+					@call-parent-search="search"
 				/>
 				
 				<!-- ナレッジテーブル -->
 				<KnowledgeTable
 					:headers="headers"
 					:endpoint="endpoint" 
-					:searchCond="searchCond" 
+					:searchCond="searchCond"
+					ref="cmpKnowledge"
 				/>
 			</div>
 			
@@ -67,8 +69,7 @@ export default {
 			categories: [],
 			subcategories: [],
 			endpoint: "question",
-			//endpoint: "personal",
-			searchCond: [],
+			searchCond: {},
 		};
 	},
 	methods: {

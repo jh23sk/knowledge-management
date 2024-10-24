@@ -1,5 +1,5 @@
 <template>
-	<v-expansion-panels v-model="activePanel" class="mx-auto px-5 py-3" style="max-width: 1050px;">
+	<v-expansion-panels v-model="activePanel" class="mx-auto px-1 py-3" style="max-width: 900px;">
 		<v-expansion-panel>
 			<v-expansion-panel-title style="background-color: #e0f7fa;">
 				検索条件
@@ -77,6 +77,20 @@
 					</v-row>
 				</v-container>
 				
+				<!-- 【Q&A画面用】回答有無 -->
+				<v-container v-if="endpoint == 'question'" class="px-1 pt-2 pb-0">
+					<v-row>
+						<v-col class="text-left pb-0">
+							<label>回答有無</label> 
+							<v-radio-group v-model="searchCond.answerState" inline>
+								<v-radio label="全て" value="all"></v-radio>
+								<v-radio label="未回答" value="notAnswerd"></v-radio>
+								<v-radio label="回答済" value="answerd"></v-radio>
+							</v-radio-group> 
+						</v-col>
+					</v-row>
+				</v-container>
+				
 				<!-- 【個人ナレッジ画面用】タイトル・内容 -->
 				<v-container v-if="endpoint == 'personal'" class="px-1 py-2">
 					<v-row>
@@ -92,7 +106,7 @@
 				</v-container>
 				
 				<!-- ボタン -->
-				<v-container class="px-1 pt-2 pb-3">
+				<v-container class="px-1 pt-1 pb-3">
 					<v-row>
 						<v-col class="text-right">
 							<v-btn text="検索条件クリア" @click="condClear()" variant="tonal" color="gray" class="mr-1"></v-btn>
@@ -126,7 +140,12 @@ export default {
 	data() {
 		return {
 			activePanel: [0],
-			searchCond: { categoryId: "", subcategoryId: "" },
+			searchCond: { categoryId: "", subcategoryId: "", answerState: "all" },
+			options: [
+				{ item: "all", name: "全て" },
+				{ item: "notAnswerd", name: "未回答" },
+				{ item: "answerd", name: "回答済" },
+			]
 		}
 	},
 	methods: {
@@ -136,7 +155,7 @@ export default {
 			this.$emit("call-parent-search", this.searchCond);
 		},
 		condClear() {
-			this.searchCond = { categoryId: "", subcategoryId: "" };
+			this.searchCond = { categoryId: "", subcategoryId: "", answerState: "all" };
 			// 子コンポーネントのIDに反映
 			this.$refs.cmpSelectCategory.setCategoryId(this.searchCond.categoryId);
 			this.$refs.cmpSelectSubcategory.setSubcategoryId(this.searchCond.subcategoryId);
@@ -147,9 +166,20 @@ export default {
 }
 </script>
 
-<!--<style>-->
- <style scoped> 
+<!-- <style scoped> -->
+<style>
 .form-label {
 	margin: 0;
+}
+
+/* ラジオボタンのラベル */
+.v-label {
+	padding: 0 !important;
+	margin: 0 !important;
+	font-size: 0.9rem !important;
+}
+/* ラジオボタン下のスペース */
+.v-input__details {
+	display: none !important;
 }
 </style>

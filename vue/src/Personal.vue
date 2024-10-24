@@ -11,7 +11,7 @@
 				</h3>
 			</header>
 
-			<div class="mx-3 mb-5">
+			<div class="mx-2 mb-5">
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 
@@ -103,7 +103,7 @@ export default {
 				this.$refs.cmpKnowledge.setKnowledge(this.knowledges);
 				
 			} catch (error) {
-				console.error('Error submitting data:', error);
+				console.error("Error submitting data:", error);
 				alert("検索が失敗しました。再試行してください。");
 			}
 		},
@@ -120,11 +120,11 @@ export default {
 			try {
 				const searchCondition = this.searchCond;
 				const response = await axios.post("/" + this.endpoint + "/save", { categories, subcategories, knowledges, searchCondition });
-				console.log('Data submitted:', response.data);
+				console.log("Data submitted:", response.data);
 				alert("保存しました。");
 				
 			} catch (error) {
-				console.error('Error submitting data:', error);
+				console.error("Error submitting data:", error);
 				alert("保存が失敗しました。再試行してください。");
 			}
 		},
