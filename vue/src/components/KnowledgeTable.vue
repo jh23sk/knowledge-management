@@ -1,149 +1,197 @@
 <template>
-	<!-- <v-container> -->
-		<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
-			<span>
-				<span v-if="editable">
-					<!-- カテゴリー追加ボタン＆ダイアログ -->
-					<v-dialog max-width="500">
-						<template v-slot:activator="{ props: activatorProps }">
-							<v-btn
-								v-bind="activatorProps"
-								color="surface-variant"
-								text="カテゴリー操作"
-								variant="flat"
-								class="mr-1"
-							></v-btn>
-						</template>
-						
-						<template v-slot:default="{ isActive }">
-							<v-card title="カテゴリー操作">
-								<v-card-text>
-									<p>カテゴリーの新規追加・削除・名称変更を行います。</p>
-									<div class="mb-3">
-										<label class="form-label m-1">カテゴリー</label>
-										<SelectCategory
-											v-model="addedMst.categoryId"
-											:categories="editingCategories"
-											:addAble="true"
-											:models="addedMst"
-											@change="addedMst.subcategoryId = ''; addedMst.subcategoryName = '';
-												addedMst.categoryName = getCategoryName(addedMst.categoryId);"
-										/>
-										<div v-if="addedMst.categoryId" class="d-flex align-items-center">
-											<input v-model="addedMst.categoryName" class="form-control" placeholder="名称を入力してください" />
-											<v-btn text="削除" v-if="addedMst.categoryId != 'new'" @click="deleteCategoryItem(1, addedMst.categoryId)" variant="outlined" color="purple"></v-btn>
-										</div>
+	<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
+		<span>
+			<span v-if="editable">
+				<!-- 【個人ナレッジ画面用】カテゴリー追加ボタン＆ダイアログ -->
+				<v-dialog max-width="500">
+					<!-- ボタン部分 -->
+					<template v-slot:activator="{ props: activatorProps }">
+						<v-btn v-bind="activatorProps" color="surface-variant" text="カテゴリー操作" variant="flat" class="mr-1" />
+					</template>
+					<!-- ダイアログ部分 -->
+					<template v-slot:default="{ isActive }">
+						<v-card title="カテゴリー操作">
+							<v-card-text class="pt-3">
+								<p>カテゴリーの新規追加・削除・名称変更を行います。</p>
+								<div class="mb-3">
+									<label class="form-label m-1">カテゴリー</label>
+									<SelectCategory
+										v-model="addedMst.categoryId"
+										:categories="editingCategories"
+										:addAble="true"
+										:models="addedMst"
+										@change="addedMst.subcategoryId = ''; addedMst.subcategoryName = '';
+											addedMst.categoryName = getCategoryName(addedMst.categoryId);"
+									/>
+									<div v-if="addedMst.categoryId" class="d-flex align-items-center">
+										<input v-model="addedMst.categoryName" class="form-control" placeholder="名称を入力してください" />
+										<v-btn text="削除" v-if="addedMst.categoryId != 'new'" @click="deleteCategoryItem(1, addedMst.categoryId)" variant="outlined" color="purple"></v-btn>
 									</div>
-									
-									<div>
-										<label class="form-label m-1">サブカテゴリー</label>
-										<SelectSubcategory 
-											v-model="addedMst.subcategoryId" 
-											:subcategories="editingSubcategories"
-											:addAble="true"
-											:models="addedMst"
-											@change="addedMst.subcategoryName = getSubcategoryName(addedMst.subcategoryId)"
-										/>
-										<div v-if="addedMst.subcategoryId" class="d-flex align-items-center">
-											<input v-model="addedMst.subcategoryName" class="form-control" placeholder="名称を入力してください" />
-											<v-btn text="削除" v-if="addedMst.subcategoryId != 'new'" @click="deleteCategoryItem(2, addedMst.subcategoryId)" variant="outlined" color="purple"></v-btn>
-										</div>
-									</div>
-								</v-card-text>
+								</div>
 								
-								<v-card-actions>
-									<v-spacer></v-spacer>
-									<v-btn text="キャンセル" @click="isActive.value = false" variant="outlined"></v-btn>
-									<v-btn text="カテゴリーリストに反映" @click="isActive.value = updateMst();" :disabled="!addedMst.categoryId" variant="outlined" color="purple"></v-btn> 
-								</v-card-actions>
-							</v-card>
-						</template>
-					</v-dialog>
-				
-					<v-btn color="primary" @click="addRow()" class="mr-1">
-						<FontAwesomeIcon icon="fa-solid fa-circle-plus" class="mr-1"/>行追加
-					</v-btn>
-					<v-btn color="primary" @click="deleteRow()" class="mr-1">
-						<FontAwesomeIcon icon="fa-solid fa-circle-minus" class="mr-1"/>行削除
-					</v-btn>
-					<v-btn color="primary" @click="save()" class="mr-1">
-						<FontAwesomeIcon icon="fa-solid fa-floppy-disk" class="mr-1"/>保存
-					</v-btn>
-				</span>
-				<v-btn-toggle v-model="toggle" color="primary" rounded="xl" mandatory>
-					<v-btn value="editMode" @click="editable = true;">
-						<FontAwesomeIcon icon="fa-solid fa-pen-to-square" class="mr-1"/>編集モード
-					</v-btn>
-					<v-btn value="viewMode" @click="editable = false;">
-						<FontAwesomeIcon icon="fa-solid fa-book-open" class="mr-1"/>閲覧モード
-					</v-btn>
-				</v-btn-toggle>
+								<div>
+									<label class="form-label m-1">サブカテゴリー</label>
+									<SelectSubcategory 
+										v-model="addedMst.subcategoryId" 
+										:subcategories="editingSubcategories"
+										:addAble="true"
+										:models="addedMst"
+										@change="addedMst.subcategoryName = getSubcategoryName(addedMst.subcategoryId)"
+									/>
+									<div v-if="addedMst.subcategoryId" class="d-flex align-items-center">
+										<input v-model="addedMst.subcategoryName" class="form-control" placeholder="名称を入力してください" />
+										<v-btn text="削除" v-if="addedMst.subcategoryId != 'new'" @click="deleteCategoryItem(2, addedMst.subcategoryId)" variant="outlined" color="purple"></v-btn>
+									</div>
+								</div>
+							</v-card-text>
+							
+							<v-card-actions>
+								<v-spacer></v-spacer>
+								<v-btn text="キャンセル" @click="isActive.value = false" variant="outlined"></v-btn>
+								<v-btn text="カテゴリーリストに反映" @click="isActive.value = updateMst();" :disabled="!addedMst.categoryId" variant="outlined" color="purple"></v-btn> 
+							</v-card-actions>
+						</v-card>
+					</template>
+				</v-dialog>
+			
+				<v-btn color="primary" @click="addRow()" class="mr-1">
+					<FontAwesomeIcon icon="fa-solid fa-circle-plus" class="mr-1"/>行追加
+				</v-btn>
+				<v-btn color="primary" @click="deleteRow()" class="mr-1">
+					<FontAwesomeIcon icon="fa-solid fa-circle-minus" class="mr-1"/>行削除
+				</v-btn>
+				<v-btn color="primary" @click="save()" class="mr-1">
+					<FontAwesomeIcon icon="fa-solid fa-floppy-disk" class="mr-1"/>保存
+				</v-btn>
 			</span>
-		</div>
-		
-		<v-card flat>
-			<!-- https://zenn.dev/bbled/books/vuetify3_book/viewer/sec2_20_datatable -->
-			<v-data-table
-				:headers="headers"
-				:items="editingknowledges"
-				:search="search"
-				:density="compact"
-				:items-per-page="100"
-				:items-per-page-options="pages"
-				items-per-page-text="表示行数"
-				no-data-text="データがありません。"
-				v-model="selected"
-				item-value="id"
-				:show-select="editable"
-			>
+			<v-btn-toggle v-model="toggle" color="primary" rounded="xl" mandatory>
+				<v-btn value="editMode" @click="editable = true;">
+					<FontAwesomeIcon icon="fa-solid fa-pen-to-square" class="mr-1"/>編集モード
+				</v-btn>
+				<v-btn value="viewMode" @click="editable = false;">
+					<FontAwesomeIcon icon="fa-solid fa-book-open" class="mr-1"/>閲覧モード
+				</v-btn>
+			</v-btn-toggle>
+		</span>
+	</div>
+	
+	<v-card flat>
+		<!-- https://zenn.dev/bbled/books/vuetify3_book/viewer/sec2_20_datatable -->
+		<v-data-table
+			:headers="headers"
+			:items="editingknowledges"
+			:search="search"
+			:density="compact"
+			:items-per-page="100"
+			:items-per-page-options="pages"
+			items-per-page-text="表示行数"
+			no-data-text="データがありません。"
+			v-model="selected"
+			item-value="id"
+			:show-select="editable"
+		>
 
-				<!-- tbody -->
-				<!-- ID ※非表示。チェックボックスを1つずつ選択可にするために、ユニークな値でレンダリングさせる必要がある -->
-				<template v-slot:[`item.id`]="{ item }">
-					<span hidden>{{ item.id }}</span>
-				</template>
+			<!-- tbody -->
+			<!-- ID ※非表示。チェックボックスを1つずつ選択可にするために、ユニークな値でレンダリングさせる必要がある -->
+			<template v-slot:[`item.id`]="{ item }">
+				<span hidden>{{ item.id }}</span>
+			</template>
+			
+			<!-- カテゴリー -->
+			<template v-slot:[`item.categoryId`]="{ item }">
+				<span v-if="editable">
+					<SelectCategory
+						v-model="item.categoryId"
+						:categories="editingCategories"
+						:addAble="false"
+						:models="item"
+						@change="item.subcategoryId = '';"
+					/>
+				</span>
+				<span v-else>{{ getCategoryName(item.categoryId) }}</span>
+			</template>
+			
+			<!-- サブカテゴリー -->
+			<template v-slot:[`item.subcategoryId`]="{ item }">
+				<span v-if="editable">
+					<SelectSubcategory 
+						v-model="item.subcategoryId" 
+						:subcategories="editingSubcategories"
+						:addAble="false"
+						:models="item"
+					/>
+				</span>
+				<span v-else>{{ getSubcategoryName(item.subcategoryId) }}</span>
+			</template>
+			
+			<!-- 【Q&A画面用】質問 -->
+			<template v-slot:[`item.question`]="{ item }">
+				<textarea v-model="item.question" class="form-control textarea-disabled p-0" readonly/>
+			</template>
+			
+			<!-- 【Q&A画面用】回答 -->
+			<template v-slot:[`item.answer`]="{ item }">
+				<textarea v-if="item.isAnswerd" v-model="item.answer" class="form-control textarea-disabled p-0" readonly/>
 				
-				<!-- カテゴリー -->
-				<template v-slot:[`item.categoryId`]="{ item }">
-					<span v-if="editable">
-						<SelectCategory
-							v-model="item.categoryId"
-							:categories="editingCategories"
-							:addAble="false"
-							:models="item"
-							@change="item.subcategoryId = '';"
-						/>
-					</span>
-					<span v-else>{{ getCategoryName(item.categoryId) }}</span>
-				</template>
-				
-				<!-- サブカテゴリー -->
-				<template v-slot:[`item.subcategoryId`]="{ item }">
-					<span v-if="editable">
-						<SelectSubcategory 
-							v-model="item.subcategoryId" 
-							:subcategories="editingSubcategories"
-							:addAble="false"
-							:models="item"
-						/>
-					</span>
-					<span v-else>{{ getSubcategoryName(item.subcategoryId) }}</span>
-				</template>
-				
-				<!-- タイトル -->
-				<template v-slot:[`item.title`]="{ item }">
-					<textarea v-if="editable" v-model="item.title" class="form-control" style="border-width:1px; resize:vertical;"/>
-					<textarea v-else v-model="item.title" class="form-control p-0" style="border-width:0px; resize:none;" readonly/>
-				</template>
-				
-				<!-- 内容 -->
-				<template v-slot:[`item.content`]="{ item }">
-					<textarea v-if="editable" v-model="item.content" class="form-control" style="border-width:1px; resize:vertical;"/>
-					<textarea v-else v-model="item.content" class="form-control p-0" style="border-width:0px; resize:none;" readonly/>
-				</template>
-			</v-data-table>
-		</v-card>
-	<!-- </v-container> -->
+				<v-dialog v-else max-width="700">
+					<!-- ボタン部分 -->
+					<template v-slot:activator="{ props: activatorProps }">
+						<v-btn text="回答する" v-bind="activatorProps" color="rgb(239, 247, 201)" block />
+					</template>
+					<!-- ダイアログ部分 -->
+					<template v-slot:default="{ isActive }">
+						<v-card title="回答する">
+							<v-card-text class="pt-3">
+								<label class="form-label">カテゴリー「{{ getCategoryName(item.categoryId) }}」</label>
+								<label class="form-label">サブカテゴリー「{{ getSubcategoryName(item.subcategoryId) }}」に関する質問</label>
+								<textarea v-model="item.question" class="form-control mt-1 mb-3" style="border-width:1px; resize:none;" readonly />
+								
+								<label class="form-label">回答</label>
+								<textarea v-model="item.answer" class="form-control textarea-enabled" />
+							</v-card-text>
+							<v-card-actions>
+								<v-spacer></v-spacer>
+								<v-btn text="キャンセル" @click="isActive.value = false" class="cancel" variant="outlined"></v-btn>
+								<v-btn text="回答" @click="answer(item)" variant="outlined" color="purple"></v-btn> 
+							</v-card-actions>
+						</v-card>
+					</template>
+				</v-dialog>
+			</template>
+			
+			<!-- 【Q&A画面用】質問日時 -->
+			<template v-slot:[`item.questionDate`]="{ item }">
+				<span>{{ formatDate(item.questionDate) }}</span>
+			</template>
+			
+			<!-- 【Q&A画面用】質問者 -->
+			<template v-slot:[`item.questionUserName`]="{ item }">
+				<span>{{ item.questionUserName }}</span>
+			</template>
+			
+			<!-- 【Q&A画面用】回答日時 -->
+			<template v-slot:[`item.answerDate`]="{ item }">
+				<span>{{ formatDate(item.answerDate) }}</span>
+			</template>
+			
+			<!-- 【Q&A画面用】回答者 -->
+			<template v-slot:[`item.answerUserName`]="{ item }">
+				<span>{{ item.answerUserName }}</span>
+			</template>
+			
+			<!-- 【個人ナレッジ画面用】タイトル -->
+			<template v-slot:[`item.title`]="{ item }">
+				<textarea v-if="editable" v-model="item.title" class="form-control textarea-enabled" />
+				<textarea v-else v-model="item.title" class="form-control textarea-disabled p-0" readonly/>
+			</template>
+			
+			<!-- 【個人ナレッジ画面用】内容 -->
+			<template v-slot:[`item.content`]="{ item }">
+				<textarea v-if="editable" v-model="item.content" class="form-control textarea-enabled" />
+				<textarea v-else v-model="item.content" class="form-control textarea-disabled p-0" readonly/>
+			</template>
+		</v-data-table>
+	</v-card>
 </template>
 
 <script>
@@ -195,6 +243,10 @@ export default {
 		setKnowledge(knowledges) {
 			this.editingknowledges = knowledges;
 			this.knowledgesSaved = knowledges;
+		},
+		/* 「yyyy-MM-dd HH:mm」形式にフォーマット */
+		formatDate(strDate) {
+			return Utils.formatDate(strDate);
 		},
 		/* 選択したカテゴリーから、サブカテゴリーを絞り込んで返却  */
 		createSubCategories(categoryId) {
@@ -355,7 +407,7 @@ export default {
 				}
 			}
 		},
-		/* 「保存」押下時処理 */
+		/* 【個人ナレッジ画面用】「保存」押下時処理 */
 		async save() {
 			this.$emit("call-parent-save", 
 				this.editingCategories, 
@@ -363,6 +415,16 @@ export default {
 				this.editingknowledges,
 				(this.selected.length > 0)
 			);
+		},
+		/* 【Q&A画面用】「回答」押下時処理 */
+		async answer(item) {
+			if(item.answer.length == 0) {
+				alert("回答を入力してください。");
+				return true;
+			}
+			this.$emit("call-parent-answer", item);
+			// 回答ダイアログを閉じる
+			$(".cancel").trigger("click");
 		},
 	},
 	watch: {
@@ -396,4 +458,16 @@ export default {
 
 <!-- <style scoped> -->
 <style>
+.v-card-item {
+	background-color: rgb(223, 231, 249);
+}
+
+.textarea-enabled {
+	border-width:1px;
+	resize:vertical;
+}
+.textarea-disabled {
+	border-width:0px;
+	resize:none;
+}
 </style>

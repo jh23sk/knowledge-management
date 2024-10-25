@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faCube,
+	faComment,
 	faComments,
 	faRightFromBracket,
 	faCirclePlus,
@@ -16,6 +17,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 library.add(
 	faCube,
+	faComment,
 	faComments,
 	faRightFromBracket,
 	faCirclePlus,

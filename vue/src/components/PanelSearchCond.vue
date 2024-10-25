@@ -1,7 +1,7 @@
 <template>
 	<v-expansion-panels v-model="activePanel" class="mx-auto px-1 py-3" style="max-width: 900px;">
 		<v-expansion-panel>
-			<v-expansion-panel-title style="background-color: #e0f7fa;">
+			<v-expansion-panel-title style="background-color: rgb(223, 231, 249);">
 				検索条件
 			</v-expansion-panel-title>
 			
@@ -82,10 +82,10 @@
 					<v-row>
 						<v-col class="text-left pb-0">
 							<label>回答有無</label> 
-							<v-radio-group v-model="searchCond.answerState" inline>
-								<v-radio label="全て" value="all"></v-radio>
-								<v-radio label="未回答" value="notAnswerd"></v-radio>
-								<v-radio label="回答済" value="answerd"></v-radio>
+							<v-radio-group v-model="searchCond.isAnswerd" inline>
+								<v-radio label="全て" value=""></v-radio>
+								<v-radio label="未回答" value="false"></v-radio>
+								<v-radio label="回答済" value="true"></v-radio>
 							</v-radio-group> 
 						</v-col>
 					</v-row>
@@ -140,12 +140,7 @@ export default {
 	data() {
 		return {
 			activePanel: [0],
-			searchCond: { categoryId: "", subcategoryId: "", answerState: "all" },
-			options: [
-				{ item: "all", name: "全て" },
-				{ item: "notAnswerd", name: "未回答" },
-				{ item: "answerd", name: "回答済" },
-			]
+			searchCond: { categoryId: "", subcategoryId: "", isAnswerd: "" },
 		}
 	},
 	methods: {
@@ -155,7 +150,7 @@ export default {
 			this.$emit("call-parent-search", this.searchCond);
 		},
 		condClear() {
-			this.searchCond = { categoryId: "", subcategoryId: "", answerState: "all" };
+			this.searchCond = { categoryId: "", subcategoryId: "", isAnswerd: "" };
 			// 子コンポーネントのIDに反映
 			this.$refs.cmpSelectCategory.setCategoryId(this.searchCond.categoryId);
 			this.$refs.cmpSelectSubcategory.setSubcategoryId(this.searchCond.subcategoryId);
