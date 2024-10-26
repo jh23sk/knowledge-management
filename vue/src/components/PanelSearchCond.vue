@@ -9,7 +9,7 @@
 				<!-- カテゴリー情報 -->
 				<v-container class="px-1 py-2">
 					<!-- PC表示 -->
-					<span v-if="windowSize.x >= 750">
+					<span v-if="windowSize.x >= 600">
 						<v-row>
 							<v-col cols="6" class="pb-1 text-left">
 								<label class="form-label">カテゴリー</label>
@@ -68,7 +68,7 @@
 				<!-- 【Q&A画面用】質問情報 -->
 				<v-container v-if="endpoint == 'question'" class="px-1 py-2">
 					<!-- PC表示 -->
-					<span v-if="windowSize.x >= 750">
+					<span v-if="windowSize.x >= 600">
 						<v-row>
 							<v-col cols="4" class="pb-1 text-left">
 								<label class="form-label">質問</label>
@@ -123,7 +123,7 @@
 				<!-- 【Q&A画面用】回答情報 -->
 				<v-container v-if="endpoint == 'question'" class="px-1 py-2">
 					<!-- PC表示 -->
-					<span v-if="windowSize.x >= 750">
+					<span v-if="windowSize.x >= 600">
 						<v-row>
 							<v-col cols="4" class="pb-1 text-left">
 								<label>回答</label>
@@ -192,7 +192,7 @@
 				<!-- 【個人ナレッジ画面用】タイトル・内容 -->
 				<v-container v-if="endpoint == 'personal'" class="px-1 py-2">
 					<!-- PC表示 -->
-					<span v-if="windowSize.x >= 750">
+					<span v-if="windowSize.x >= 600">
 						<v-row>
 							<v-col cols="6" class="pb-0 text-left">
 								<label>タイトル</label>
@@ -257,7 +257,7 @@ export default {
 	},
 	data() {
 		return {
-			activePanel: [0],
+			activePanel: [0], // 0：パネル表示、ブランク：パネル非表示
 			searchCond: { categoryId: "", subcategoryId: "", isAnswerd: "" },
 		}
 	},
