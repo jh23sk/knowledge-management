@@ -98,17 +98,21 @@
 							</v-col>
 						</v-row>
 						<v-row class="mt-1">
-							<v-col cols="" class="pb-1 text-left">
+							<v-col class="pb-1 text-left">
 								<label class="form-label">質問日時</label>
 								<div class="d-flex align-items-center">
 									<InputDatetime v-model="searchCond.questionDateStt" width="45%" />
 									<div class="mx-1">〜</div>
-									<InputDatetime v-model="searchCond.questionDateEnd" width="45%" />
 								</div>
 							</v-col>
 						</v-row>
 						<v-row class="mt-1">
-							<v-col cols="" class="pb-1 text-left">
+							<v-col class="pb-1 text-left">
+								<InputDatetime v-model="searchCond.questionDateEnd" width="45%" />
+							</v-col>
+						</v-row>
+						<v-row class="mt-1">
+							<v-col class="pb-1 text-left">
 								<label class="form-label">質問者</label>
 								<input v-model="searchCond.questionUserName" class="form-control">
 							</v-col>
@@ -154,8 +158,12 @@
 								<div class="d-flex align-items-center">
 									<InputDatetime v-model="searchCond.answerDateStt" width="45%" />
 									<div class="mx-1">〜</div>
-									<InputDatetime v-model="searchCond.answerDateEnd" width="45%" />
 								</div>
+							</v-col>
+						</v-row>
+						<v-row class="mt-1">
+							<v-col class="pb-1 text-left">
+								<InputDatetime v-model="searchCond.answerDateEnd" width="45%" />
 							</v-col>
 						</v-row>
 						<v-row class="mt-1">
