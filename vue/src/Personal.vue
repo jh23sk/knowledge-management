@@ -22,7 +22,7 @@
 				/>
 
 				<!-- ナレッジテーブル -->
-				<KnowledgeTable
+				<TableKnowledge
 					:headers="headers"
 					:endpoint="endpoint"
 					ref="cmpKnowledge"
@@ -40,7 +40,7 @@
 import axios from 'axios';
 import NavBar from './components/NavBar.vue';
 import PanelSearchCond from './components/PanelSearchCond.vue';
-import KnowledgeTable from './components/KnowledgeTable.vue';
+import TableKnowledge from './components/TableKnowledge.vue';
 import Footer from './components/Footer.vue';
 
 export default {
@@ -48,7 +48,7 @@ export default {
 	components: {
 		NavBar,
 		PanelSearchCond,
-		KnowledgeTable,
+		TableKnowledge,
 		Footer,
 	},
 	data() {
