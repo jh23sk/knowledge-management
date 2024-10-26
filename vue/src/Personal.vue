@@ -16,7 +16,8 @@
 				<PanelSearchCond 
 					:categories="categories" 
 					:subcategories="subcategories"
-					:endpoint="endpoint" 
+					:endpoint="endpoint"
+					:windowSize="windowSize"
 					@call-parent-search="search"
 				/>
 
