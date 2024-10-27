@@ -346,16 +346,4 @@ export default {
 
 <!-- <style scoped> -->
 <style>
-.v-card-item {
-	background-color: rgb(223, 231, 249);
-}
-
-.textarea-enabled {
-	border-width:1px;
-	resize:vertical;
-}
-.textarea-disabled {
-	border-width:0px;
-	resize:none;
-}
 </style>
