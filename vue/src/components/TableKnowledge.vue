@@ -2,10 +2,10 @@
 	<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
 		<span>
 			<span v-if="editable">
-				<!-- 【個人ナレッジ画面用】カテゴリー追加ボタン＆ダイアログ -->
 				<ButtonAddCategory
-					:categories = "editingCategories" 
-					:subcategories = "editingSubcategories"
+					:categories="editingCategories" 
+					:subcategories="editingSubcategories"
+					:saveBtnName="'保存'"
 					@call-parent-set-category="setCategory"
 				/>
 				<v-btn color="primary" @click="addRow()" class="mr-1">
@@ -190,7 +190,7 @@ export default {
 		};
 	},
 	methods: {
-		/* 【親から呼び出し】検索したカテゴリーリストを当コンポーネントに反映 */
+		/* 【親及び子から呼び出し】検索したカテゴリーリストを当コンポーネントに反映 */
 		setCategory(categories, subcategories) {
 			this.editingCategories = categories;
 			this.editingSubcategories = subcategories;

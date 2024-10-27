@@ -263,7 +263,6 @@ export default {
 	},
 	methods: {
 		search() {
-			console.log(this.searchCond);
 			// 検索条件を渡して親の検索処理を呼ぶ
 			this.$emit("call-parent-search", this.searchCond);
 		},
@@ -281,7 +280,4 @@ export default {
 
 <!-- <style scoped> -->
 <style>
-.form-label {
-	margin: 0;
-}
 </style>

@@ -2,7 +2,7 @@
 	<v-dialog max-width="500">
 		<!-- ボタン部分 -->
 		<template v-slot:activator="{ props: activatorProps }">
-			<v-btn v-bind="activatorProps" color="surface-variant" text="カテゴリー操作" variant="flat" class="mr-1" />
+			<v-btn v-bind="activatorProps" color="rgb(247, 240, 179)" text="カテゴリー操作" variant="flat" class="mr-1" />
 		</template>
 		<!-- ダイアログ部分 -->
 		<template v-slot:default="{ isActive }">
@@ -67,6 +67,7 @@ export default {
 	props: {
 		categories: {},
 		subcategories: {},
+		saveBtnName: String,
 	},
 	data() {
 		return {
@@ -151,7 +152,7 @@ export default {
 			// 親コンポーネントのリストに反映 
 			this.$emit("call-parent-set-category", this.editingCategories, this.editingSubcategories);
 			
-			alert("カテゴリーリストに反映しました。保存ボタンで保存してください。");
+			alert("カテゴリーリストに反映しました。" + this.saveBtnName + "ボタンクリック時に保存されます。");
 			this.addedMst = [];
 			return false;
 		},

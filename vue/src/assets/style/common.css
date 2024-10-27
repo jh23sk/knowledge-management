@@ -102,3 +102,7 @@ td {
 	border-width:0px;
 	resize:none;
 }
+
+.form-label {
+	margin: 0;
+}

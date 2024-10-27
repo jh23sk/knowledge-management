@@ -12,6 +12,15 @@
 			</header>
 
 			<div class="mx-4 mb-5">
+				<!-- 質問投稿 -->
+				<PanelPostQuestion 
+					:categories="categories" 
+					:subcategories="subcategories"
+					:windowSize="windowSize"
+					ref="cmpPost"
+					@call-parent-post="post"
+				/>
+				
 				<!-- 検索条件 -->
 				<PanelSearchCond 
 					:categories="categories" 
@@ -40,6 +49,7 @@
 //import $ from 'jquery';
 import axios from 'axios';
 import NavBar from './components/NavBar.vue';
+import PanelPostQuestion from './components/PanelPostQuestion.vue';
 import PanelSearchCond from './components/PanelSearchCond.vue';
 import TableKnowledge from './components/TableKnowledge.vue';
 import Footer from './components/Footer.vue';
@@ -48,6 +58,7 @@ export default {
 	name: 'App',
 	components: {
 		NavBar,
+		PanelPostQuestion,
 		PanelSearchCond,
 		TableKnowledge,
 		Footer,
@@ -92,11 +103,26 @@ export default {
 				this.subcategories = response.data.subcategories;
 				
 				// 子コンポーネントの配列に反映
+				this.$refs.cmpPost.setCategory(this.categories, this.subcategories);
 				this.$refs.cmpKnowledge.setCategory(this.categories, this.subcategories);
 			})
 			.catch(error => {
 				console.error("初期設定エラー:", error);
 			});
+		},
+		/* 「投稿」押下時処理 */
+		async post(postContent, categories, subcategories) {
+			try {
+				//const response = await axios.post("/" + this.endpoint + "/postQuestion", postContent);
+				console.log(postContent);
+				console.log(categories);
+				console.log(subcategories);
+				alert("質問を投稿しました。");
+				
+			} catch (error) {
+				console.error("Error submitting data:", error);
+				alert("質問の投稿が失敗しました。再試行してください。");
+			}
 		},
 		/* 「検索」押下時処理 */
 		async search(inputSearchCond) {
@@ -132,9 +158,6 @@ export default {
 						isAnswerd: false,
 					},
 				];
-				
-				//console.log("↓searchKnowledgeのレスポンス");
-				//console.log(response.data);
 				
 				// 子コンポーネントの配列に反映
 				this.$refs.cmpKnowledge.setKnowledge(this.knowledges);
