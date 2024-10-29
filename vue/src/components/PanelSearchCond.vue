@@ -258,7 +258,8 @@ export default {
 	data() {
 		return {
 			activePanel: [0], // 0：パネル表示、ブランク：パネル非表示
-			searchCond: { categoryId: "", subcategoryId: "", isAnswerd: "" },
+			//searchCond: { categoryId: "", subcategoryId: "", isAnswerd: "" },
+			searchCond: {},
 		}
 	},
 	methods: {
@@ -267,12 +268,22 @@ export default {
 			this.$emit("call-parent-search", this.searchCond);
 		},
 		condClear() {
-			this.searchCond = { categoryId: "", subcategoryId: "", isAnswerd: "" };
+			this.initSearchCond();
 			// 子コンポーネントのIDに反映
 			this.$refs.cmpSelectCategory.setCategoryId(this.searchCond.categoryId);
 			this.$refs.cmpSelectSubcategory.setSubcategoryId(this.searchCond.subcategoryId);
 		},
-    },
+		initSearchCond() {
+			if(this.endpoint == 'question') {
+				this.searchCond = { categoryId: "", subcategoryId: "", isAnswerd: "" };
+			} else {
+				this.searchCond = { categoryId: "", subcategoryId: "" };
+			}
+		},
+	},
+	mounted() {
+		this.initSearchCond();
+	},
 	watch: {
 	},
 }

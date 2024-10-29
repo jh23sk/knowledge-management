@@ -11,18 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.personal.Category;
 import com.example.demo.models.personal.Knowledge;
 import com.example.demo.models.personal.SearchCondition;
 import com.example.demo.models.personal.Subcategory;
-import com.example.demo.request.personal.SaveRequest;
 import com.example.demo.services.personal.CategoryService;
 import com.example.demo.services.personal.KnowledgeService;
 import com.example.demo.services.personal.SubcategoryService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/personal")
@@ -60,9 +61,13 @@ public class DataController {
 	 * @return List<Knowledge> 検索条件に合致するナレッジリスト
 	 */
 	@PostMapping("/searchKnowledge")
-	public ResponseEntity<Map<String, Object>> searchKnowledge(@RequestBody SearchCondition searchCond) {
+	public ResponseEntity<Map<String, Object>> searchKnowledge(@RequestParam String searchCondition) {
 		try {
 			String loginUserId = "test_user";
+
+			// JSONから変換
+			ObjectMapper objectMapper = new ObjectMapper();
+			SearchCondition searchCond = objectMapper.readValue(searchCondition, SearchCondition.class);
 
 			List<Knowledge> knowledges = knowledgeService.searchKnowledges(searchCond, loginUserId);
 
@@ -79,30 +84,46 @@ public class DataController {
 
 	@PostMapping("/save")
 	@Transactional
-	public ResponseEntity<String> saveData(@RequestBody SaveRequest saveRequest) {
+	public ResponseEntity<String> save(
+			@RequestParam String categories,
+			@RequestParam String subcategories,
+			@RequestParam String knowledges,
+			@RequestParam String searchCondition) {
+
 		try {
 			String loginUserId = "test_user";
-	
+
+			// JSONから変換
+			ObjectMapper objectMapper = new ObjectMapper();
+			List<Category> categoryList = objectMapper.readValue(categories,
+					new TypeReference<List<Category>>() {
+					});
+			List<Subcategory> subcategoryList = objectMapper.readValue(subcategories,
+					new TypeReference<List<Subcategory>>() {
+					});
+			List<Knowledge> knowledgeList = objectMapper.readValue(knowledges,
+					new TypeReference<List<Knowledge>>() {
+					});
+			SearchCondition searchCond = objectMapper.readValue(searchCondition, SearchCondition.class);
+
 			// いったん画面に表示中のデータをdelete
 			categoryService.deleteCategoriesByOwnerId(loginUserId);
 			subcategoryService.deleteSubcategoriesByOwnerId(loginUserId);
-			SearchCondition searchCond = saveRequest.getSearchCondition();
 			knowledgeService.deleteKnowledgesBySearchCond(searchCond, loginUserId);
-			
+
 			// 任意入力の項目がブランクの場合、nullに変換
-			List<Knowledge> knowledges = saveRequest.getKnowledges();
-			for (Knowledge knowledge : knowledges) {
+			for (Knowledge knowledge : knowledgeList) {
 				knowledge.setCategoryId(StringUtils.trimToNull(knowledge.getCategoryId()));
 				knowledge.setSubcategoryId(StringUtils.trimToNull(knowledge.getSubcategoryId()));
 				knowledge.setTitle(StringUtils.trimToNull(knowledge.getTitle()));
 				knowledge.setContent(StringUtils.trimToNull(knowledge.getContent()));
 			}
-	
+
 			// 画面に表示中のデータをinsert
-			categoryService.saveCategories(saveRequest.getCategories(), loginUserId);
-			subcategoryService.saveSubcategories(saveRequest.getSubcategories(), loginUserId);
-			knowledgeService.saveKnowledges(knowledges, loginUserId);
-	
+			categoryService.saveCategories(categoryList, loginUserId);
+			subcategoryService.saveSubcategories(subcategoryList, loginUserId);
+			knowledgeService.saveKnowledges(knowledgeList, loginUserId);
+
 			return ResponseEntity.ok("データ保存成功");
 
 		} catch (Exception e) {

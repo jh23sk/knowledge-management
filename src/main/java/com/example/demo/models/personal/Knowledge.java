@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +44,7 @@ public class Knowledge {
 	@Column(name = "content", columnDefinition = "TEXT")
 	private String content;
 
+	@JsonIgnore 
 	@Column(name = "update_date")
 	private LocalDateTime updateDate;
 }

@@ -90,12 +90,18 @@ export default {
 		};
 	},
 	methods: {
+		/* CSRFトークン取得 */
+		async fetchCsrfToken() {
+			try {
+				const response = await axios.get("/csrf-token");
+				this.csrfToken = response.data.csrfToken;
+			} catch (error) {
+				console.error("CSRFトークンの取得に失敗しました:", error);
+			}
+        },
 		onResize() {
 			this.windowSize = { x: window.innerWidth, y: window.innerHeight }
 		},
-		/* search() {
-			console.log(this.searchCond);
-		}, */
 		/* カテゴリーのマスタデータを検索 */
 		searchCategoryList() {
 			//axios.get(`${window.location.origin}` + "/" + this.endpoint + "/searchCategory")
@@ -190,8 +196,9 @@ export default {
 		console.log("createdが呼ばれました");
 		this.searchCategoryList();
 	},
-	mounted () {
-		this.onResize()
+	async mounted () {
+		await this.fetchCsrfToken();
+		this.onResize();
 	},
 }
 </script>

@@ -39,6 +39,7 @@
 <script>
 //import $ from 'jquery';
 import axios from 'axios';
+import qs from 'qs';
 import NavBar from './components/NavBar.vue';
 import PanelSearchCond from './components/PanelSearchCond.vue';
 import TableKnowledge from './components/TableKnowledge.vue';
@@ -58,6 +59,7 @@ export default {
 				x: 0,
 				y: 0,
 			},
+			csrfToken: "",
 			headers: [
 				// ID列は非表示なのでデータ不要
 				{ key: "categoryId", title: "カテゴリー", align: "center", sortable: false, width: "15%" },
@@ -73,6 +75,15 @@ export default {
 		};
 	},
 	methods: {
+		/* CSRFトークン取得 */
+		async fetchCsrfToken() {
+			try {
+				const response = await axios.get("/csrf-token");
+				this.csrfToken = response.data.csrfToken;
+			} catch (error) {
+				console.error("CSRFトークンの取得に失敗しました:", error);
+			}
+        },
 		onResize() {
 			this.windowSize = { x: window.innerWidth, y: window.innerHeight }
 		},
@@ -95,11 +106,18 @@ export default {
 		/* 「検索」押下時処理 */
 		async search(inputSearchCond) {
 			try {
-				const response = await axios.post("/" + this.endpoint + "/searchKnowledge", inputSearchCond);
+				const response = await axios.post("/" + this.endpoint + "/searchKnowledge", qs.stringify({
+					searchCondition: JSON.stringify(inputSearchCond)
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
+					},
+					withCredentials: true
+				});
+				
 				this.knowledges = response.data.knowledges;
 				this.searchCond = inputSearchCond;
-				console.log("↓searchKnowledgeのレスポンス");
-				console.log(response.data);
 				
 				// 子コンポーネントの配列に反映
 				this.$refs.cmpKnowledge.setKnowledge(this.knowledges);
@@ -121,7 +139,20 @@ export default {
             
 			try {
 				const searchCondition = this.searchCond;
-				const response = await axios.post("/" + this.endpoint + "/save", { categories, subcategories, knowledges, searchCondition });
+				const response = await axios.post("/" + this.endpoint + "/save", qs.stringify({
+					categories: JSON.stringify(categories),
+					subcategories: JSON.stringify(subcategories),
+					knowledges: JSON.stringify(knowledges),
+					searchCondition: JSON.stringify(searchCondition)
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
+					},
+					withCredentials: true
+				});
+				
+				
 				console.log("Data submitted:", response.data);
 				alert("保存しました。");
 				
@@ -137,8 +168,9 @@ export default {
 		console.log("personalのcreated");
 		this.searchCategoryList();
 	},
-	mounted () {
-		this.onResize()
+	async mounted () {
+		await this.fetchCsrfToken();
+		this.onResize();
 	},
 }
 </script>
