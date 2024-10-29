@@ -19,9 +19,10 @@
 					:endpoint="endpoint"
 					:windowSize="windowSize"
 					@call-parent-search="search"
+					class="mx-auto px-1 pt-3 pb-4"
 				/>
 
-				<!-- ナレッジテーブル -->
+				<!-- ナレッジ一覧 -->
 				<TableKnowledge
 					:headers="headers"
 					:endpoint="endpoint"

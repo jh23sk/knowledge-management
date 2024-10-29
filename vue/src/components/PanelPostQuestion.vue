@@ -1,5 +1,5 @@
 <template>
-	<v-expansion-panels v-model="activePanel" class="mx-auto px-1 py-3" style="max-width: 900px;">
+	<v-expansion-panels v-model="activePanel" style="max-width: 900px;">
 		<v-expansion-panel>
 			<v-expansion-panel-title style="background-color: rgb(223, 231, 249);">
 				質問投稿

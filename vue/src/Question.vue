@@ -19,6 +19,7 @@
 					:windowSize="windowSize"
 					ref="cmpPost"
 					@call-parent-post="post"
+					class="mx-auto px-1 py-3"
 				/>
 				
 				<!-- 検索条件 -->
@@ -28,9 +29,10 @@
 					:endpoint="endpoint"
 					:windowSize="windowSize"
 					@call-parent-search="search"
+					class="mx-auto px-1 pt-3 pb-4"
 				/>
 				
-				<!-- ナレッジテーブル -->
+				<!-- ナレッジ一覧 -->
 				<TableKnowledge
 					:headers="headers"
 					:endpoint="endpoint" 
