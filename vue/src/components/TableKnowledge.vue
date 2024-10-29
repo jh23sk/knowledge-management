@@ -2,7 +2,7 @@
 	<div v-if="endpoint == 'personal'" class="mb-2 d-flex justify-content-end">
 		<span>
 			<span v-if="editable">
-				<ButtonAddCategory
+				<ButtonCategoryEdit
 					:categories="editingCategories" 
 					:subcategories="editingSubcategories"
 					:saveBtnName="'保存'"
@@ -152,14 +152,14 @@
 import $ from 'jquery';
 import { v4 as uuidv4 } from 'uuid';
 import * as Utils from '../assets/function/utils.js';
-import ButtonAddCategory from './ButtonAddCategory.vue';
+import ButtonCategoryEdit from './ButtonCategoryEdit.vue';
 import SelectCategory from './SelectCategory.vue';
 import SelectSubcategory from './SelectSubcategory.vue';
 
 export default {
 	name: 'cmp-footer',
 	components: {
-		ButtonAddCategory,
+		ButtonCategoryEdit,
 		SelectCategory,
 		SelectSubcategory,
 	},

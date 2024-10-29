@@ -79,7 +79,7 @@
 				<v-container class="px-1 pt-0 pb-3 mt-3">
 					<v-row>
 						<v-col class="text-right">
-							<ButtonAddCategory
+							<ButtonCategoryEdit
 								:categories = "editingCategories" 
 								:subcategories = "editingSubcategories"
 								:saveBtnName="'投稿'"
@@ -95,14 +95,14 @@
 </template>
 
 <script>
-import ButtonAddCategory from './ButtonAddCategory.vue';
+import ButtonCategoryEdit from './ButtonCategoryEdit.vue';
 import SelectCategory from './SelectCategory.vue';
 import SelectSubcategory from './SelectSubcategory.vue';
 
 export default {
 	name: 'cmp-panel-post-question',
 	components: {
-		ButtonAddCategory,
+		ButtonCategoryEdit,
 		SelectCategory,
 		SelectSubcategory,
 	},

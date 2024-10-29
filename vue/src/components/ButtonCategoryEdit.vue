@@ -71,7 +71,7 @@ export default {
 	},
 	data() {
 		return {
-			addedMst: [],
+			addedMst: { categoryId: "", subcategoryId: "" },
 			editingCategories: [],
 			editingSubcategories: [],
 		}
