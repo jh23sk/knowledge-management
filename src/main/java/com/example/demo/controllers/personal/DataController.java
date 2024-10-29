@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,11 +43,17 @@ public class DataController {
 		this.knowledgeService = knowledgeService;
 	}
 
+	/**
+	 * カテゴリー/サブカテゴリーリストをDBから検索します。
+	 */
 	@GetMapping("/searchCategory")
 	public ResponseEntity<Map<String, Object>> getCategory() {
 
-		String loginUserId = "test_user";
+		// ログインユーザー情報を取得
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String loginUserId = authentication.getName();
 
+		// 検索
 		List<Category> categories = categoryService.getCategoriesByOwnerId(loginUserId);
 		List<Subcategory> subcategories = subcategoryService.getSubcategoriesByOwnerId(loginUserId);
 
@@ -57,18 +65,19 @@ public class DataController {
 
 	/**
 	 * ナレッジリストをDBから検索します。
-	 * 
-	 * @return List<Knowledge> 検索条件に合致するナレッジリスト
 	 */
 	@PostMapping("/searchKnowledge")
 	public ResponseEntity<Map<String, Object>> searchKnowledge(@RequestParam String searchCondition) {
 		try {
-			String loginUserId = "test_user";
+			// ログインユーザー情報を取得
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String loginUserId = authentication.getName();
 
 			// JSONから変換
 			ObjectMapper objectMapper = new ObjectMapper();
 			SearchCondition searchCond = objectMapper.readValue(searchCondition, SearchCondition.class);
 
+			// 検索
 			List<Knowledge> knowledges = knowledgeService.searchKnowledges(searchCond, loginUserId);
 
 			Map<String, Object> response = new HashMap<>();
@@ -82,6 +91,9 @@ public class DataController {
 		}
 	}
 
+	/**
+	 * ナレッジリストをDBに保存します。
+	 */
 	@PostMapping("/save")
 	@Transactional
 	public ResponseEntity<String> save(
@@ -91,7 +103,9 @@ public class DataController {
 			@RequestParam String searchCondition) {
 
 		try {
-			String loginUserId = "test_user";
+			// ログインユーザー情報を取得
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String loginUserId = authentication.getName();
 
 			// JSONから変換
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -106,7 +120,7 @@ public class DataController {
 					});
 			SearchCondition searchCond = objectMapper.readValue(searchCondition, SearchCondition.class);
 
-			// いったん画面に表示中のデータをdelete
+			// 画面に表示中のデータをいったんdelete
 			categoryService.deleteCategoriesByOwnerId(loginUserId);
 			subcategoryService.deleteSubcategoriesByOwnerId(loginUserId);
 			knowledgeService.deleteKnowledgesBySearchCond(searchCond, loginUserId);
