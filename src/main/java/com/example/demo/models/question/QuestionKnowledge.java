@@ -41,6 +41,9 @@ public class QuestionKnowledge {
 	@Column(name = "question_user_id")
 	private String questionUserId;
 	
+	@Column(name = "question_user_name")
+	private String questionUserName;
+	
 	@Column(name = "answer")
 	private String answer;
 	
@@ -49,6 +52,9 @@ public class QuestionKnowledge {
 	
 	@Column(name = "answer_user_id")
 	private String answerUserId;
+	
+	@Column(name = "answer_user_name")
+	private String answerUserName;
 
 	@JsonIgnore 
 	@Column(name = "update_date")

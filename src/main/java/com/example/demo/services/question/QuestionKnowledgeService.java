@@ -15,8 +15,10 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.models.common.LoginUser;
 import com.example.demo.models.question.QuestionKnowledge;
 import com.example.demo.models.question.SearchCondition;
+import com.example.demo.repositories.common.LoginUserRepository;
 import com.example.demo.repositories.question.QuestionKnowledgeRepository;
 
 @Service
@@ -26,9 +28,12 @@ public class QuestionKnowledgeService {
 	private EntityManager entityManager;
 
 	private final QuestionKnowledgeRepository knowledgeRepository;
+	private final LoginUserRepository loginUserRepository;
 
-	public QuestionKnowledgeService(QuestionKnowledgeRepository knowledgeRepository) {
+	public QuestionKnowledgeService(QuestionKnowledgeRepository knowledgeRepository,
+			LoginUserRepository loginUserRepository) {
 		this.knowledgeRepository = knowledgeRepository;
+		this.loginUserRepository = loginUserRepository;
 	}
 
 	/**
@@ -163,6 +168,11 @@ public class QuestionKnowledgeService {
 	public void saveKnowledges(QuestionKnowledge knowledge, String loginUserId) {
 		// questionUserIdにログインユーザーIDを設定
 		knowledge.setQuestionUserId(loginUserId);
+		// questionUserNameにログインユーザー名を設定（マスタ参照）
+        LoginUser loginUser = loginUserRepository.findById(loginUserId)
+            .orElseThrow(() -> new RuntimeException("LoginUser not found")); // ユーザーが見つからない場合のエラーハンドリング
+        String questionUserName = loginUser.getNameSei() + " " + loginUser.getNameMei();
+		knowledge.setQuestionUserName(questionUserName);
 		// questionDateにシステム日時を設定
 		knowledge.setQuestionDate(LocalDateTime.now());
 		// updateDateにシステム日時を設定
@@ -175,7 +185,7 @@ public class QuestionKnowledgeService {
 	public QuestionKnowledge updateQuestionKnowledge(QuestionKnowledge knowledge, String loginUserId) {
 		String id = StringUtils.trimToNull(knowledge.getId());
 		String answer = StringUtils.trimToNull(knowledge.getAnswer());
-		
+
 		// IDに基づいてエンティティを取得
 		QuestionKnowledge existingKnowledge = knowledgeRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("QuestionKnowledge not found"));
@@ -184,6 +194,11 @@ public class QuestionKnowledgeService {
 		existingKnowledge.setAnswer(answer);
 		// answerUserIdにログインユーザーIDを設定
 		existingKnowledge.setAnswerUserId(loginUserId);
+		// answerUserNameにログインユーザー名を設定（マスタ参照）
+        LoginUser loginUser = loginUserRepository.findById(loginUserId)
+            .orElseThrow(() -> new RuntimeException("LoginUser not found")); // ユーザーが見つからない場合のエラーハンドリング
+        String answerUserName = loginUser.getNameSei() + " " + loginUser.getNameMei();
+        existingKnowledge.setAnswerUserName(answerUserName);
 		// answerDateにシステム日時を設定
 		existingKnowledge.setAnswerDate(LocalDateTime.now());
 		// updateDateにシステム日時を設定
