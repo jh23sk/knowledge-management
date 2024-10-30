@@ -21,6 +21,4 @@ public class SearchCondition {
 	private String answerDateEnd;
 	private String answerUserName;
 	private Boolean isAnswerd;
-//	private String title;
-//	private String content;
 }

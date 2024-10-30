@@ -53,6 +53,8 @@
 
 <script>
 import $ from 'jquery';
+import axios from 'axios';
+import qs from 'qs';
 import { v4 as uuidv4 } from 'uuid';
 import * as Utils from '../assets/function/utils.js';
 import SelectCategory from './SelectCategory.vue';
@@ -67,6 +69,10 @@ export default {
 	props: {
 		categories: {},
 		subcategories: {},
+		knowledgesSaved: {},
+		editingknowledges: {},
+		endpoint: String,
+		csrfToken: String,
 		saveBtnName: String,
 	},
 	data() {
@@ -84,6 +90,67 @@ export default {
 		/* サブカテゴリーのIDに対応する名称を返す */
 		getSubcategoryName(subcategoryId) {
 			return Utils.getMasterName(this.editingSubcategories, subcategoryId);
+		},
+		/* カテゴリーの「削除」押下時処理 */
+		/* 【引数】type：1(カテゴリー)または2(サブカテゴリー)、id：選択したID */
+		/* 【戻り値】true(エラーあり)またはfalse(エラーなし) */
+		async deleteCategoryItem(type, id) {
+			const typeName = type == 1 ? "カテゴリー" : "サブカテゴリー";
+			
+			if(confirm("この" + typeName + "を削除しますか？")) {
+				/* エラーチェック */
+				// 配下のサブカテゴリーが存在しないこと
+				if(type == 1) {
+					if(this.createSubCategories(id).length > 0) {
+						alert("配下のサブカテゴリーが存在するため削除できません。");
+						return true;
+					}
+				}
+				
+				// 保存済のナレッジで使用していないこと
+				const searchCond = { categoryId: "", subcategoryId: "" };
+				const response = await axios.post("/" + this.endpoint + "/searchKnowledge", qs.stringify({
+					searchCondition: JSON.stringify(searchCond)
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
+					},
+					withCredentials: true
+				});
+				const fil1 = response.data.knowledges;
+				
+				// 保存前のナレッジで使用していないこと
+				const fil2 = this.editingknowledges.filter(knowledge => {
+					return (type == 1 ? knowledge.categoryId : knowledge.subcategoryId) == id;
+				});
+				if(fil1.length > 0 || fil2.length > 0) {
+					alert("ナレッジに設定中のため削除できません。");
+					return true;
+				}
+				
+				/* 対象のカテゴリーをリストから削除 */
+				if(type == 1) {
+					this.editingCategories = this.editingCategories.filter(editingCategory => {
+						return editingCategory.id != id;
+					});
+				} else {
+					this.editingSubcategories = this.editingSubcategories.filter(editingSubcategory => {
+						return editingSubcategory.id != id;
+					});
+				}
+				
+				// 初期化
+				if(type == 1) {
+					this.addedMst = [];
+				} else {
+					this.addedMst.subcategoryId = "";
+					this.addedMst.subcategoryName = "";
+				}
+				
+				alert(typeName + "を削除しました。保存ボタンで保存してください。");				
+				return false;
+			}
 		},
 		/* カテゴリーリスト更新 【戻り値】エラーなし：false、エラーあり：true */
 		updateMst() {

@@ -16,6 +16,9 @@
 				<PanelPostQuestion 
 					:categories="categories" 
 					:subcategories="subcategories"
+					:knowledges="knowledges"
+					:endpoint="endpoint"
+					:csrfToken="csrfToken"
 					:windowSize="windowSize"
 					ref="cmpPost"
 					@call-parent-post="post"
@@ -133,6 +136,8 @@ export default {
 					},
 					withCredentials: true
 				});
+				
+				$("#searchButton").trigger("click");
 				
 				console.log("Data submitted:", response.data);
 				alert("質問を投稿しました。");

@@ -5,6 +5,10 @@
 				<ButtonCategoryEdit
 					:categories="editingCategories" 
 					:subcategories="editingSubcategories"
+					:knowledgesSaved="knowledgesSaved"
+					:editingknowledges="editingknowledges"
+					:endpoint="endpoint"
+					:csrfToken="csrfToken"
 					:saveBtnName="'保存'"
 					@call-parent-set-category="setCategory"
 				/>
@@ -174,6 +178,7 @@ export default {
 			}
 		],
 		endpoint: String,
+		csrfToken: String,
 	},
 	data() {
 		return {
@@ -215,58 +220,6 @@ export default {
 		/* サブカテゴリーのIDに対応する名称を返す */
 		getSubcategoryName(subcategoryId) {
 			return Utils.getMasterName(this.editingSubcategories, subcategoryId);
-		},
-		/* カテゴリーの「削除」押下時処理 */
-		/* 【引数】type：1(カテゴリー)または2(サブカテゴリー)、id：選択したID */
-		/* 【戻り値】true(エラーあり)またはfalse(エラーなし) */
-		deleteCategoryItem(type, id) {
-			const typeName = type == 1 ? "カテゴリー" : "サブカテゴリー";
-			
-			if(confirm("この" + typeName + "を削除しますか？")) {
-				/* エラーチェック */
-				// 配下のサブカテゴリーが存在しないこと
-				if(type == 1) {
-					if(this.createSubCategories(id).length > 0) {
-						alert("配下のサブカテゴリーが存在するため削除できません。");
-						return true;
-					}
-				}
-				
-				// 保存済のナレッジで使用していないこと
-				const fil1 = this.knowledgesSaved.filter(knowledge => {
-					return (type == 1 ? knowledge.categoryId : knowledge.subcategoryId) == id;
-				});
-				// 保存前のナレッジで使用していないこと
-				const fil2 = this.editingknowledges.filter(knowledge => {
-					return (type == 1 ? knowledge.categoryId : knowledge.subcategoryId) == id;
-				});
-				if(fil1.length > 0 || fil2.length > 0) {
-					alert("ナレッジに設定中のため削除できません。");
-					return true;
-				}
-				
-				/* 対象のカテゴリーをリストから削除 */
-				if(type == 1) {
-					this.editingCategories = this.editingCategories.filter(editingCategory => {
-						return editingCategory.id != id;
-					});
-				} else {
-					this.editingSubcategories = this.editingSubcategories.filter(editingSubcategory => {
-						return editingSubcategory.id != id;
-					});
-				}
-				
-				// 初期化
-				if(type == 1) {
-					this.addedMst = [];
-				} else {
-					this.addedMst.subcategoryId = "";
-					this.addedMst.subcategoryName = "";
-				}
-				
-				alert(typeName + "を削除しました。保存ボタンで保存してください。");				
-				return false;
-			}
 		},
 		/* 「行追加」押下時処理 */
 		addRow() {

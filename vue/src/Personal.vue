@@ -17,6 +17,7 @@
 					:categories="categories" 
 					:subcategories="subcategories"
 					:endpoint="endpoint"
+					:csrfToken="csrfToken"
 					:windowSize="windowSize"
 					@call-parent-search="search"
 					class="mx-auto px-1 pt-3 pb-4"

@@ -51,10 +51,6 @@ public class QuestionDataController {
 	@GetMapping("/searchCategory")
 	public ResponseEntity<Map<String, Object>> getCategory() {
 
-		// ログインユーザー情報を取得
-		//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		//		String loginUserId = authentication.getName();
-
 		// 検索
 		List<QuestionCategory> categories = categoryService.getAllCategories();
 		List<QuestionSubcategory> subcategories = subcategoryService.getAllSubcategories();
@@ -71,13 +67,9 @@ public class QuestionDataController {
 	@PostMapping("/searchKnowledge")
 	public ResponseEntity<Map<String, Object>> searchKnowledge(@RequestParam String searchCondition) {
 		try {
-			//			// ログインユーザー情報を取得
-			//			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			//			String loginUserId = authentication.getName();
 
 			// JSONから変換
 			ObjectMapper objectMapper = new ObjectMapper();
-			//objectMapper.registerModule(new JavaTimeModule());
 			SearchCondition searchCond = objectMapper.readValue(searchCondition, SearchCondition.class);
 
 			// 検索

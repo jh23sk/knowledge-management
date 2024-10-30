@@ -82,6 +82,10 @@
 							<ButtonCategoryEdit
 								:categories = "editingCategories" 
 								:subcategories = "editingSubcategories"
+								:knowledgesSaved="knowledges"
+								:editingknowledges="knowledges"
+								:endpoint="endpoint"
+								:csrfToken="csrfToken"
 								:saveBtnName="'投稿'"
 								@call-parent-set-category="setCategory"
 							/>
@@ -110,6 +114,9 @@ export default {
 	props: {
 		categories: [],
 		subcategories: [],
+		knowledges: [],
+		endpoint: String,
+		csrfToken: String,
 		windowSize: {},
 	},
 	data() {
@@ -128,6 +135,7 @@ export default {
 		post() {
 			// 投稿内容を渡して親の投稿処理を呼ぶ
 			this.$emit("call-parent-post", this.postContent, this.editingCategories, this.editingSubcategories);
+			//this.postContent = { id: uuidv4(), categoryId: "", subcategoryId: "", question: "" };
 		},
     },
 	watch: {
