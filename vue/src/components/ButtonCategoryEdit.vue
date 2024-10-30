@@ -44,7 +44,7 @@
 				<v-card-actions>
 					<v-spacer></v-spacer>
 					<v-btn text="キャンセル" @click="isActive.value = false" variant="outlined"></v-btn>
-					<v-btn text="カテゴリーリストに反映" @click="isActive.value = updateMst();" :disabled="!addedMst.categoryId" variant="outlined" color="purple"></v-btn> 
+					<v-btn text="カテゴリーリストに反映" @click="isActive.value = updateMst();" variant="outlined" color="purple"></v-btn> 
 				</v-card-actions>
 			</v-card>
 		</template>
@@ -91,6 +91,10 @@ export default {
 		getSubcategoryName(subcategoryId) {
 			return Utils.getMasterName(this.editingSubcategories, subcategoryId);
 		},
+		/* 選択したカテゴリーから、サブカテゴリーを絞り込んで返却  */
+		createSubCategories(categoryId) {
+			return Utils.createSubCategories(this.editingSubcategories, categoryId);
+		},
 		/* カテゴリーの「削除」押下時処理 */
 		/* 【引数】type：1(カテゴリー)または2(サブカテゴリー)、id：選択したID */
 		/* 【戻り値】true(エラーあり)またはfalse(エラーなし) */
@@ -108,7 +112,12 @@ export default {
 				}
 				
 				// 保存済のナレッジで使用していないこと
-				const searchCond = { categoryId: "", subcategoryId: "" };
+				var searchCond = {};
+				if(type == 1) {
+					searchCond = { categoryId: id, subcategoryId: "" };
+				} else {
+					searchCond = { categoryId: "", subcategoryId: id };
+				}
 				const response = await axios.post("/" + this.endpoint + "/searchKnowledge", qs.stringify({
 					searchCondition: JSON.stringify(searchCond)
 				}), {

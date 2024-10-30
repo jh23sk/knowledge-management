@@ -259,7 +259,7 @@ export default {
 		},
 		/* 【Q&A画面用】「回答」押下時処理 */
 		async answer(item) {
-			if(item.answer.length == 0) {
+			if(!item.answer) {
 				alert("回答を入力してください。");
 				return true;
 			}
@@ -269,21 +269,6 @@ export default {
 		},
 	},
 	watch: {
-		// 編集したらロード、検索ボタン押下前とかに「保存しますか？」ダイアログを出したい
-		// 初期表示でカテゴリーはupdate検知してしまう（親から当コンポーネントの関数呼んで反映させてるため）検索したときは検知する
-		// ナレッジは入力したり行追加しても検知されない
-		/* editingCategories() {
-			console.log("カテゴリー変更");
-			this.updateFlg = true;
-		},
-		editingSubcategories() {
-			console.log("サブカテゴリー変更");
-			this.updateFlg = true;
-		},
-		editingknowledges() {
-			console.log("ナレッジ変更");
-			this.updateFlg = true;
-		}, */
 	},
 	created() {
 		console.log("knowledgetableのcreated")
@@ -297,6 +282,5 @@ export default {
 }
 </script>
 
-<!-- <style scoped> -->
 <style>
 </style>

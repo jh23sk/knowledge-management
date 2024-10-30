@@ -133,6 +133,11 @@ export default {
 			this.editingSubcategories = subcategories;
 		},
 		post() {
+			if(!this.postContent.question) {
+				alert("質問を入力してください。")
+				return true;
+			}
+			
 			// 投稿内容を渡して親の投稿処理を呼ぶ
 			this.$emit("call-parent-post", this.postContent, this.editingCategories, this.editingSubcategories);
 			//this.postContent = { id: uuidv4(), categoryId: "", subcategoryId: "", question: "" };

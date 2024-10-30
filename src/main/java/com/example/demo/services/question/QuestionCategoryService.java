@@ -38,18 +38,18 @@ public class QuestionCategoryService {
 //		return categoryRepository.findByOwnerId(loginUserId);
 //	}
 
-//	/**
-//	 * カテゴリーリストをDBから削除します。
-//	 * 対象：t_personal_category.owner_idとログインユーザーIDが一致するデータ
-//	 * 
-//	 * @param loginUserId ログインユーザーID
-//	 */
-//	public void deleteCategoriesByOwnerId(String ownerId) {
-//		List<Category> categories = getCategoriesByOwnerId(ownerId);
-//		if (!categories.isEmpty()) {
-//			categoryRepository.deleteAll(categories);
-//		}
-//	}
+	/**
+	 * カテゴリーリストをDBから削除します。
+	 * 対象：全て
+	 * 
+	 * @param loginUserId ログインユーザーID
+	 */
+	public void deleteAllCategories() {
+		List<QuestionCategory> categories = categoryRepository.findAll();
+		if (!categories.isEmpty()) {
+			categoryRepository.deleteAll(categories);
+		}
+	}
 
 	/**
 	 * カテゴリーリストをDBに保存します。

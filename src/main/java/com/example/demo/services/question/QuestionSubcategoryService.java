@@ -38,18 +38,18 @@ public class QuestionSubcategoryService {
 //		return subcategoryRepository.findByOwnerId(loginUserId);
 //	}
 
-//	/**
-//	 * サブカテゴリーリストをDBから削除します。
-//	 * 対象：t_personal_subcategory.owner_idとログインユーザーIDが一致するデータ
-//	 * 
-//	 * @param loginUserId ログインユーザーID
-//	 */
-//	public void deleteSubcategoriesByOwnerId(String ownerId) {
-//		List<Subcategory> subcategories = getSubcategoriesByOwnerId(ownerId);
-//		if (!subcategories.isEmpty()) {
-//			subcategoryRepository.deleteAll(subcategories);
-//		}
-//	}
+	/**
+	 * サブカテゴリーリストをDBから削除します。
+	 * 対象：全て
+	 * 
+	 * @param loginUserId ログインユーザーID
+	 */
+	public void deleteAllSubcategories() {
+		List<QuestionSubcategory> subcategories = subcategoryRepository.findAll();
+		if (!subcategories.isEmpty()) {
+			subcategoryRepository.deleteAll(subcategories);
+		}
+	}
 
 	/**
 	 * サブカテゴリーリストをDBに保存します。

@@ -87,7 +87,7 @@ public class QuestionDataController {
 	}
 
 	/**
-	 * ナレッジをDBに保存します。
+	 * カテゴリーリスト・サブカテゴリーリスト・ナレッジをDBに保存します。
 	 */
 	@PostMapping("/question")
 	@Transactional
@@ -110,6 +110,10 @@ public class QuestionDataController {
 					new TypeReference<List<QuestionSubcategory>>() {
 					});
 			QuestionKnowledge knowledge = objectMapper.readValue(postContent, QuestionKnowledge.class);
+			
+			// いったんdelete
+			categoryService.deleteAllCategories();
+			subcategoryService.deleteAllSubcategories();
 
 			// 任意入力の項目がブランクの場合、nullに変換
 			knowledge.setCategoryId(StringUtils.trimToNull(knowledge.getCategoryId()));
