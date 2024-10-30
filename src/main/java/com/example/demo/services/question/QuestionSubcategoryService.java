@@ -27,17 +27,6 @@ public class QuestionSubcategoryService {
 		return subcategoryRepository.findAll();
 	}
 	
-//	/**
-//	 * サブカテゴリーリストをDBから検索します。
-//	 * 対象：t_personal_subcategory.owner_idとログインユーザーIDが一致するデータ
-//	 * 
-//	 * @param loginUserId ログインユーザーID
-//	 * @return List<Subcategory> サブカテゴリーリスト
-//	 */
-//	public List<Subcategory> getSubcategoriesByOwnerId(String loginUserId) {
-//		return subcategoryRepository.findByOwnerId(loginUserId);
-//	}
-
 	/**
 	 * サブカテゴリーリストをDBから削除します。
 	 * 対象：全て

@@ -237,7 +237,6 @@
 </template>
 
 <script>
-//import * as Utils from '../assets/function/utils.js';
 import SelectCategory from './SelectCategory.vue';
 import SelectSubcategory from './SelectSubcategory.vue';
 import InputDatetime from './InputDatetime.vue';
@@ -258,7 +257,6 @@ export default {
 	data() {
 		return {
 			activePanel: [0], // 0：パネル表示、ブランク：パネル非表示
-			//searchCond: { categoryId: "", subcategoryId: "", isAnswerd: "" },
 			searchCond: {},
 		}
 	},
@@ -289,6 +287,5 @@ export default {
 }
 </script>
 
-<!-- <style scoped> -->
 <style>
 </style>

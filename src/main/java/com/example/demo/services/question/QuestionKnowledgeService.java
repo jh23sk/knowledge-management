@@ -140,21 +140,6 @@ public class QuestionKnowledgeService {
 		return query.getResultList();
 	}
 
-	//	/**
-	//	 * ナレッジリリストをDBから削除します。
-	//	 * 対象：t_personal_knowledge.owner_idとログインユーザーIDが一致する、かつ画面で設定した検索条件に一致するデータ
-	//	 * 
-	//	 * @param searchCond 画面で設定した検索条件
-	//	 * @param loginUserId ログインユーザーID
-	//	 */
-	//	@Transactional
-	//	public void deleteKnowledgesBySearchCond(SearchCondition searchCond, String loginUserId) {
-	//		List<Knowledge> knowledgesToDelete = searchKnowledges(searchCond, loginUserId);
-	//		if (!knowledgesToDelete.isEmpty()) {
-	//			knowledgeRepository.deleteAll(knowledgesToDelete);
-	//		}
-	//	}
-
 	/**
 	 * ナレッジをDBに保存します。
 	 * t_personal_knowledge.owner_idにログインユーザーID、
@@ -186,7 +171,7 @@ public class QuestionKnowledgeService {
 		String id = StringUtils.trimToNull(knowledge.getId());
 		String answer = StringUtils.trimToNull(knowledge.getAnswer());
 
-		// IDに基づいてエンティティを取得
+		// IDに紐づくナレッジを検索
 		QuestionKnowledge existingKnowledge = knowledgeRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("QuestionKnowledge not found"));
 

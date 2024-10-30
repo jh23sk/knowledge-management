@@ -200,11 +200,7 @@ export default {
 			}
 		},
 	},
-	beforeCreate () {
-		//this.searchAllKnowledges();
-	},
 	created() {
-		console.log("createdが呼ばれました");
 		this.searchCategoryList();
 	},
 	async mounted () {

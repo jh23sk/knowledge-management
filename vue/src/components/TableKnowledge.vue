@@ -268,17 +268,6 @@ export default {
 			$(".cancel").trigger("click");
 		},
 	},
-	watch: {
-	},
-	created() {
-		console.log("knowledgetableのcreated")
-	},
-	mounted () {
-		console.log("mountedが呼ばれました");
-	},
-	computed: {
-		
-	},
 }
 </script>
 

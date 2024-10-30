@@ -27,17 +27,6 @@ public class QuestionCategoryService {
 		return categoryRepository.findAll();
 	}
 
-//	/**
-//	 * カテゴリーリストをDBから検索します。
-//	 * 対象：t_personal_category.owner_idとログインユーザーIDが一致するデータ
-//	 * 
-//	 * @param loginUserId ログインユーザーID
-//	 * @return List<Category> カテゴリーリスト
-//	 */
-//	public List<Category> getCategoriesByOwnerId(String loginUserId) {
-//		return categoryRepository.findByOwnerId(loginUserId);
-//	}
-
 	/**
 	 * カテゴリーリストをDBから削除します。
 	 * 対象：全て

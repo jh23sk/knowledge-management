@@ -19,8 +19,6 @@
 					<FontAwesomeIcon icon="fa-solid fa-right-from-bracket" class="mr-1"/>ログアウト
 				</a>
 			</button>
-						
-			<!-- <FontAwesomeIcon icon="fa-solid fa-address-card" class="mr-1"/><a href="#profile" class="mr-3">マイページ</a> -->
 		</template>
 	</v-app-bar>
 </template>
@@ -33,7 +31,6 @@ export default {
 }
 </script>
 
-<!-- <style scoped> -->
 <style>
 /* a {
 	font-size: 18px;

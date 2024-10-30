@@ -2,12 +2,6 @@
  * 共通関数
  */
 
-/* 引数のカテゴリリストから、IDが一致する名称を返す */
-//export function getCategoryName(categoryList, categoryId) {
-//		const category = categoryList.find(category => category.id === categoryId);
-//		return category ? category.name : "";
-//}
-
 /* 引数のマスタ配列から、IDが一致する名称を返す */
 export function getMasterName(masterDataLists, id) {
 	if(id == "" || id == null) {

@@ -163,10 +163,7 @@ export default {
 			}
 		},
 	},
-	beforeCreate () {
-	},
 	created() {
-		console.log("personalのcreated");
 		this.searchCategoryList();
 	},
 	async mounted () {
