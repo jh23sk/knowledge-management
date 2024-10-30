@@ -48,8 +48,9 @@
 </template>
 
 <script>
-//import $ from 'jquery';
+import $ from 'jquery';
 import axios from 'axios';
+import qs from 'qs';
 import NavBar from './components/NavBar.vue';
 import PanelPostQuestion from './components/PanelPostQuestion.vue';
 import PanelSearchCond from './components/PanelSearchCond.vue';
@@ -104,8 +105,8 @@ export default {
 		},
 		/* カテゴリーのマスタデータを検索 */
 		searchCategoryList() {
-			//axios.get(`${window.location.origin}` + "/" + this.endpoint + "/searchCategory")
-			axios.get(`${window.location.origin}/personal/searchCategory`)
+			axios.get(`${window.location.origin}` + "/" + this.endpoint + "/searchCategory")
+			//axios.get(`${window.location.origin}/personal/searchCategory`)
 			.then(response => {
 				this.categories = response.data.categories;
 				this.subcategories = response.data.subcategories;
@@ -121,10 +122,19 @@ export default {
 		/* 「投稿」押下時処理 */
 		async post(postContent, categories, subcategories) {
 			try {
-				//const response = await axios.post("/" + this.endpoint + "/postQuestion", postContent);
-				console.log(postContent);
-				console.log(categories);
-				console.log(subcategories);
+				const response = await axios.post("/" + this.endpoint + "/question", qs.stringify({
+					categories: JSON.stringify(categories),
+					subcategories: JSON.stringify(subcategories),
+					postContent: JSON.stringify(postContent),
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
+					},
+					withCredentials: true
+				});
+				
+				console.log("Data submitted:", response.data);
 				alert("質問を投稿しました。");
 				
 			} catch (error) {
@@ -135,37 +145,23 @@ export default {
 		/* 「検索」押下時処理 */
 		async search(inputSearchCond) {
 			try {
-				//const response = await axios.post("/" + this.endpoint + "/searchKnowledge", inputSearchCond);
-				//this.knowledges = response.data.knowledges;
-				this.searchCond = inputSearchCond;
 				
-				// デバッグ用！！！
-				this.knowledges = [
-					{
-						id: "sampleId1",
-						categoryId: "345f3be3-879a-417e-bd1a-3f0f6d7a3d7f",
-						subcategoryId: "dc45cfa0-b288-42bc-a8c2-3b5e9fcc34ec",
-						question: "【質問1】〜〜〜ですか？",
-						answer: "【回答1】〜〜〜です。",
-						questionDate: "2024-10-24 10:58:32.984786",
-						questionUserName: "社員 太郎",
-						answerDate: "2024-10-25 10:58:32.984786",
-						answerUserName: "社員 花子",
-						isAnswerd: true,
+				console.log(inputSearchCond);
+				
+				const response = await axios.post("/" + this.endpoint + "/searchKnowledge", qs.stringify({
+					searchCondition: JSON.stringify(inputSearchCond)
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
 					},
-					{
-						id: "sampleId2",
-						categoryId: "345f3be3-879a-417e-bd1a-3f0f6d7a3d7f",
-						subcategoryId: "dc45cfa0-b288-42bc-a8c2-3b5e9fcc34ec",
-						question: "【質問2】〜〜〜ですか？",
-						answer: "",
-						questionDate: "2024-10-26 14:58:32.984786",
-						questionUserName: "社員 太郎",
-						answerDate: "",
-						answerUserName: "",
-						isAnswerd: false,
-					},
-				];
+					withCredentials: true
+				});
+				
+				console.log(response.data);
+				
+				this.knowledges = response.data.knowledges;
+				this.searchCond = inputSearchCond;
 				
 				// 子コンポーネントの配列に反映
 				this.$refs.cmpKnowledge.setKnowledge(this.knowledges);
@@ -178,9 +174,19 @@ export default {
 		/* 「回答」押下時処理 */
 		async answer(item) {
 			try {
-/* 				const response = await axios.post("/" + this.endpoint + "/answer", { categories, subcategories, knowledges, searchCondition });
-				console.log("Data submitted:", response.data); */
-				console.log(item);
+				const response = await axios.post("/" + this.endpoint + "/answer", qs.stringify({
+					postContent: JSON.stringify(item),
+				}), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRF-TOKEN': this.csrfToken,
+					},
+					withCredentials: true
+				});
+				
+				$("#searchButton").trigger("click");
+				
+				console.log("Data submitted:", response.data);
 				alert("回答しました。");
 				
 			} catch (error) {

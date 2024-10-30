@@ -85,7 +85,7 @@
 			
 			<!-- 【Q&A画面用】回答 -->
 			<template v-slot:[`item.answer`]="{ item }">
-				<textarea v-if="item.isAnswerd" v-model="item.answer" class="form-control textarea-disabled p-0" readonly/>
+				<textarea v-if="item.answerDate" v-model="item.answer" class="form-control textarea-disabled p-0" readonly/>
 				
 				<v-dialog v-else max-width="700">
 					<!-- ボタン部分 -->

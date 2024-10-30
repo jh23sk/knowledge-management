@@ -227,7 +227,7 @@
 					<v-row>
 						<v-col class="text-right">
 							<v-btn text="検索条件クリア" @click="condClear()" variant="tonal" color="gray" class="mr-1"></v-btn>
-							<v-btn text="検索" @click="search()" variant="tonal" color="primary"></v-btn>
+							<v-btn text="検索" id="searchButton" @click="search()" variant="tonal" color="primary"></v-btn>
 						</v-col>
 					</v-row>
 				</v-container>

@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import ButtonCategoryEdit from './ButtonCategoryEdit.vue';
 import SelectCategory from './SelectCategory.vue';
 import SelectSubcategory from './SelectSubcategory.vue';
@@ -114,7 +115,7 @@ export default {
 	data() {
 		return {
 			activePanel: [], // 0：パネル表示、ブランク：パネル非表示
-			postContent: { categoryId: "", subcategoryId: "", question: "" },
+			postContent: { id: uuidv4(), categoryId: "", subcategoryId: "", question: "" },
 			editingCategories: [],
 			editingSubcategories: [],
 		}

@@ -2,7 +2,7 @@
 	<VueDatePicker
 		v-model="date"
 		:format="'yyyy-MM-dd HH:mm'"
-		model-type="timestamp"
+		model-type="format"
 		:enable-time-picker="true"
 		week-start="0"
 		locale="ja"

@@ -1,11 +1,10 @@
-package com.example.demo.models.personal;
+package com.example.demo.models.question;
 
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,21 +15,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "t_personal_category")
-@IdClass(TPersonalCategoryPK.class)
+@Table(name = "t_common_category")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Category {
-
+public class QuestionCategory {
+	
 	@Id
 	@Column(name = "id", nullable = false)
 	private String id;
 
-	@Id
-	@Column(name = "owner_id", nullable = false)
-	private String ownerId;
+	@Column(name = "creator_id")
+	private String creatorId;
 
 	@Column(name = "name", columnDefinition = "VARCHAR(300)")
 	private String name;
@@ -38,4 +35,5 @@ public class Category {
 	@JsonIgnore
 	@Column(name = "update_date")
 	private LocalDateTime updateDate;
+
 }

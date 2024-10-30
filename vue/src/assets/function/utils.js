@@ -33,7 +33,7 @@ export function createSubCategories(mstSubcategories, categoryId) {
 export function formatDate(strDate) {
 	const date = new Date(strDate);
 	// Date型に変換できない場合はそのまま返却
-	if (isNaN(date.getTime())) {
+	if (isNaN(date.getTime()) || strDate == "" || strDate == null) {
 		return strDate;
 	}
 	
